@@ -26,6 +26,14 @@ public class RequestParameters {
 	public void setMethod(String method) {
 		this.method = method;
 	}
+	
+	public String getHeaderString(){
+		String res ="";
+		for(Map.Entry<String, String> entry : this.headers.entrySet()){
+			res+=entry.getKey()+":"+entry.getValue()+" \r\n";
+		}
+		return res;
+	}
 
 	public Map<String, String> getHeaders() {
 		return headers;
