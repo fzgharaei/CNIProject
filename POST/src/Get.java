@@ -6,7 +6,7 @@ import java.net.Socket;
 import java.net.URL;
 
 public class Get {
-	public static void main(String[] argv) throws Exception {
+	public void post(String[] argv) throws Exception {
 
 		try {
 			InetAddress address = InetAddress.getByName("www.httpbin.org");
