@@ -56,14 +56,14 @@ public class CmdParser {
 							 break;
 						 case "-d":
 							 if(args.length > i+1){
-								 reqParams.setData(args[2]);
+								 reqParams.setData(args[i+1]);
 								 i+=2;
 							 }else
 								 throw new Exception("BadSyntax");
 							 break;
 						 case "-f":
 							 if(args.length > i+1){
-								 reqParams.setFile(args[2]);
+								 reqParams.setFile(args[i+1]);
 								 i+=2;
 							 }else
 								 throw new Exception("BadSyntax");
