@@ -1,9 +1,9 @@
-import java.util.Map;
 
 public class CmdParser {
 		private RequestParameters reqParams;
-		public Map<String,String> parse(String[] args) throws Exception{
+		public RequestParameters parse(String[] args) throws Exception{
 			int i;
+			reqParams = new RequestParameters();
 			switch(args[0]){
 				case "help":
 					if(args.length>1)
@@ -20,6 +20,7 @@ public class CmdParser {
 								System.out.println("\t-v file \t\t Associates the content of a file to the body HTTP POST");
 								System.out.println();
 								System.out.println("Either [-d] or [-f] can be used but not both.");
+								break;
 							case "get":
 								System.out.println("httpc help get");
 								System.out.println();
@@ -28,6 +29,7 @@ public class CmdParser {
 								System.out.println("Get executes a HTTP GET request for a given URL.");
 								System.out.println("\t-v \t\t Prints the detail of the response such as protocol, status, and headers.");
 								System.out.println("\t-h \t\t key:value Associates headers to HTTP Request with the format 'key:value'");
+								break;
 							default:
 								throw new Exception("BadSyntax");
 						}
@@ -42,29 +44,30 @@ public class CmdParser {
 						System.out.println("\thelp \tprints this screen.");
 						System.out.println();
 						System.out.println("Use \"httpc help [command]\" for more information about a command.");
-
+						break;
 					}
 				case "post":
 					i=1;
-					while(i<args.length)
+					while(i<args.length){
 						switch(args[i]){
 						 case "-v":
-							 {
-								 reqParams.setVerbose(true);
-								 i++;
-							 }
+							 reqParams.setVerbose(true);
+							 i++;
+							 break;
 						 case "-d":
 							 if(args.length > i+1){
 								 reqParams.setData(args[2]);
 								 i+=2;
 							 }else
 								 throw new Exception("BadSyntax");
+							 break;
 						 case "-f":
 							 if(args.length > i+1){
 								 reqParams.setFile(args[2]);
 								 i+=2;
 							 }else
 								 throw new Exception("BadSyntax");
+							 break;
 						 case "-h":
 							 if(args.length > i+1){
 								 String[] temp = args[i+1].split(":");
@@ -77,13 +80,17 @@ public class CmdParser {
 							 }else
 								 throw new Exception("BadSyntax");
 						}
+						break;
+					}
+				break;
 				case "get":
 					i=1;
-					while(i<args.length)
+					while(i<args.length){
 						switch(args[i]){
 						 case "-v":
-								 reqParams.setVerbose(true);
-								 i++;
+							 reqParams.setVerbose(true);
+							 i++;
+							 break;
 						case "-h":
 							 if(args.length > i+1){
 								 String[] temp = args[i+1].split(":");
@@ -96,8 +103,14 @@ public class CmdParser {
 							 }else
 								 throw new Exception("BadSyntax");
 						}
+						break;
+					}
+					break;
 				default:
 					throw new Exception("BadSyntax");
 			}
+//			System.out.println(args);
+			reqParams.setUrl(args[args.length-1]);
+			return reqParams;
 		}
 }
