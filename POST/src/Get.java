@@ -8,8 +8,8 @@ import java.net.URL;
 public class Get {
 	private RequestParameters parameters;
 
-	public Get() {
-		parameters = new RequestParameters();
+	public Get(RequestParameters rp) {
+		parameters = rp;
 	}
 
 	public void get(String url, String headers) throws Exception {
@@ -18,7 +18,7 @@ public class Get {
 		// get information related to header types
 		// Print verbose
 		try {
-			InetAddress address = InetAddress.getByName("www.httpbin.org");
+			InetAddress address = InetAddress.getByName(url);
 			Socket s = new Socket(address, 80);
 			PrintWriter pw = new PrintWriter(s.getOutputStream());
 
@@ -29,12 +29,18 @@ public class Get {
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			String t;
-			while ((t = br.readLine()) != null)
-				if (parameters.isVerbose()) {
+			while ((t = br.readLine()) != null) {
+				if (t.isEmpty() && !parameters.isVerbose()) {
+					StringBuilder responseData = new StringBuilder();
+					while ((t = br.readLine()) != null) {
+						responseData.append(t).append("\r\n");
+					}
+					System.out.println(responseData.toString());
+					parameters.verbose = false;
+					break;
+				} else if(parameters.isVerbose())// handle output
 					System.out.println(t);
-				} else {
-					// handle output
-				}
+			}
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
