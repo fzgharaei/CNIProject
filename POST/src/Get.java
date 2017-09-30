@@ -6,11 +6,19 @@ import java.net.Socket;
 import java.net.URL;
 
 public class Get {
-	public void get (String[] argv) throws Exception {
+	private RequestParameters parameters;
 
+	public Get() {
+		parameters = new RequestParameters();
+	}
+
+	public void get(String url, String headers) throws Exception {
+
+		// Split the host and get part
+		// get information related to header types
+		// Print verbose
 		try {
 			InetAddress address = InetAddress.getByName("www.httpbin.org");
-			System.out.println("address is" +address);
 			Socket s = new Socket(address, 80);
 			PrintWriter pw = new PrintWriter(s.getOutputStream());
 
@@ -19,11 +27,14 @@ public class Get {
 			pw.println("");
 			pw.flush();
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					s.getInputStream()));
+			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 			String t;
 			while ((t = br.readLine()) != null)
-				System.out.println(t);
+				if (parameters.isVerbose()) {
+					System.out.println(t);
+				} else {
+					// handle output
+				}
 			br.close();
 		} catch (Exception e) {
 			e.printStackTrace();
