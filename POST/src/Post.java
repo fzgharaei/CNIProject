@@ -15,7 +15,9 @@ public class Post{
 		InetAddress address = InetAddress.getByName(url.getHost());
 		try{
 			Socket socket = new Socket(address, 80);
-		    
+			System.out.println(url.getHost());
+			System.out.println(url.getFile());
+			System.out.println(data);
 		    BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
 		    wr.write("POST " + url.getFile() + " HTTP/1.0\r\n");
 		    wr.write("Content-Length: " + data.length() + "\r\n");
@@ -23,7 +25,6 @@ public class Post{
 		    wr.write("\r\n");
 		    wr.write(data);
 		    wr.flush();
-		    wr.close();
 		    
 		    
 		    BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -37,6 +38,8 @@ public class Post{
 					break;
 				}
 			}
+			
+			wr.close();
 			rd.close();
 		    socket.close();
 		    
@@ -44,7 +47,9 @@ public class Post{
 				e.printStackTrace();
 			}
 	 }
+		
 }
+
 
 
 
