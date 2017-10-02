@@ -28,21 +28,20 @@ public class Get {
 			pw.flush();
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(s.getInputStream()));
-			String t;
-			while ((t = br.readLine()) != null) {
-				if (t.isEmpty() && !parameters.isVerbose()) {
-					StringBuilder responseData = new StringBuilder();
-					while ((t = br.readLine()) != null) {
-						responseData.append(t).append("\r\n");
+			String line;
+			while ((line = br.readLine()) != null) {
+				if(parameters.isVerbose())// handle output
+					System.out.println(line);
+				else if(line.isEmpty() && !parameters.isVerbose()) {
+					while ((line = br.readLine()) != null) {
+						System.out.println(line);
 					}
-					System.out.println(responseData.toString());
 					parameters.verbose = false;
 					break;
-				} else if(parameters.isVerbose())// handle output
-					System.out.println(t);
+				}
 			}
 			br.close();
-		} catch (Exception e) {
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
