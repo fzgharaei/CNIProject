@@ -79,10 +79,10 @@ public class CmdParser {
 								 }
 							 }else
 								 throw new Exception("BadSyntax");
-						}
-						break;
+							}
+								break;
 					}
-				break;
+					break;
 				case "get":
 					i=1;
 					while(i<args.length){
