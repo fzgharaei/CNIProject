@@ -17,7 +17,7 @@ public class Get {
 			String path = url.getFile();
 			String host = url.getHost();
 			InetAddress address = InetAddress.getByName(host);
-			
+			//
 			Socket socket = new Socket(address, 80);
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			System.out.println(path);
