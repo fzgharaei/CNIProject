@@ -54,6 +54,7 @@ public class CmdParser {
 							 reqParams.setVerbose(true);
 							 i++;
 							 break;
+							 
 						 case "-d":
 							 if(args.length > i+1){
 								 reqParams.setData(args[i+1]);
@@ -61,6 +62,7 @@ public class CmdParser {
 							 }else
 								 throw new Exception("BadSyntax");
 							 break;
+							 
 						 case "-f":
 							 if(args.length > i+1){
 								 reqParams.setFile(args[i+1]);
@@ -68,6 +70,7 @@ public class CmdParser {
 							 }else
 								 throw new Exception("BadSyntax");
 							 break;
+							 
 						 case "-h":
 							 if(args.length > i+1){
 								 String[] temp = args[i+1].split(":");
@@ -79,10 +82,23 @@ public class CmdParser {
 								 }
 							 }else
 								 throw new Exception("BadSyntax");
-							}
+							
+							 break;
+
+							default: 
+								reqParams.setUrl(args[args.length-1]);
+								i = args.length;
 								break;
+								
+								/**
+								 * Todo:  should throw an exception as well if we have bad syntax
+								 */
+								
+						}
+								//break;
 					}
 					break;
+					
 				case "get":
 					i=1;
 					while(i<args.length){

@@ -23,7 +23,7 @@ public class Get {
 			System.out.println(path);
 			System.out.println(host);
 
-			pw.println("GET" + path +"HTTP/1.1");
+			pw.println("GET " + path +" HTTP/1.1");
 			pw.println("Host: " +host);
 			pw.println("");
 			pw.flush();

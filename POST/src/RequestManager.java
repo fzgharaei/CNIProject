@@ -7,20 +7,23 @@ public class RequestManager {
 	public static void main(String[] argv) {
 
 		CmdParser parser = new CmdParser();
-		String[] data = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
-//		String[] data = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
+		String[] getData = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
+		String[] postData = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
 		
-		Get get;
+		Get getAgent;
 		Post postAgent;
 	
 		try {
 			
-			RequestParameters rp = parser.parse(data);
-//			get = new Get();
-//			get.get(rp);
+			//RequestParameters rp = parser.parse(data);
+			getAgent = new Get();
+			System.out.println("******** GET *******");
+			getAgent.get(parser.parse(getData));
+			System.out.println("******** GET *******");
 			postAgent = new Post();
-			postAgent.post(rp);
-
+			System.out.println("******** POST *******");
+			postAgent.post(parser.parse(postData));
+			System.out.println("******** POST *******");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
