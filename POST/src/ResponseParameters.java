@@ -7,39 +7,45 @@ import java.util.Map;
  */
 public class ResponseParameters {
 	
-	private int status;
+	private String status;
 	private Map<String,String> responseHeaders;
 	private String responseData;
 	
 	public ResponseParameters() {
 		responseHeaders =  new HashMap<String,String>();
 		this.responseData = "";
-		this.status = 0;
+		this.status = "";
 	}
 	
-	public int getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
-		this.status = status;
+	public void setStatus(String temp) {
+		this.status = temp;
 	}
 
-	private Map<String, String> getResponseHeaders() {
+	public Map<String, String> getResponseHeaders() {
 		return responseHeaders;
 	}
+	
+	public void addHeaderItem(String key, String val){
+		this.responseHeaders.put(key, val);
+	}
 
-	private void setResponseHeaders(Map<String, String> responseHeaders) {
+	public void setResponseHeaders(Map<String, String> responseHeaders) {
 		this.responseHeaders = responseHeaders;
 	}
 
-	private String getResponseData() {
+	public String getResponseData() {
 		return responseData;
 	}
 
-	private void setResponseData(String responseData) {
+	public void setResponseData(String responseData) {
 		this.responseData = responseData;
 	}
 
-	
+	public void appendRespondData(String appendString){
+		this.responseData += (appendString+'\n');
+	}
 }
