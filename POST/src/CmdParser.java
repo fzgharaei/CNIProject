@@ -1,3 +1,6 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class CmdParser {
 		private RequestParameters reqParams;
@@ -48,6 +51,7 @@ public class CmdParser {
 					}
 				case "post":
 					i=1;
+					boolean dataSourseSet = false;
 					while(i<args.length){
 						switch(args[i]){
 						 case "-v":
@@ -56,17 +60,31 @@ public class CmdParser {
 							 break;
 							 
 						 case "-d":
-							 if(args.length > i+1){
+							 if(args.length > i+1 && !dataSourseSet){
 								 reqParams.setData(args[i+1]);
 								 i+=2;
+								 dataSourseSet = true;
 							 }else
 								 throw new Exception("BadSyntax");
 							 break;
 							 
 						 case "-f":
-							 if(args.length > i+1){
+							 if(args.length > i+1 && !dataSourseSet){
 								 reqParams.setFile(args[i+1]);
 								 i+=2;
+								 try{
+									FileReader file = new FileReader(args[i+1]);
+									BufferedReader buff = new BufferedReader(file);
+									String line;
+									String fileData = "";
+									while ((line = buff.readLine()) != null) {
+										fileData+=(line+"\n");
+									}
+									reqParams.setData(fileData);
+								 }catch(IOException e){
+									 throw new Exception("The given file doesn't exist or it's unable to be opened");
+								 }
+								 dataSourseSet = true;
 							 }else
 								 throw new Exception("BadSyntax");
 							 break;
