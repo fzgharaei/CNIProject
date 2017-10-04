@@ -81,6 +81,8 @@ public class CmdParser {
 										fileData+=(line+"\n");
 									}
 									reqParams.setData(fileData);
+									buff.close();
+									file.close();
 								 }catch(IOException e){
 									 throw new Exception("The given file doesn't exist or it's unable to be opened");
 								 }
