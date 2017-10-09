@@ -1,5 +1,3 @@
-import java.net.URL;
-
 public class RequestManager {
 //	Post postAgent;
 	Get getAgent;
@@ -7,23 +5,30 @@ public class RequestManager {
 	public static void main(String[] argv) {
 
 		CmdParser parser = new CmdParser();
-		String[] getData = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
-		String[] postData = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
-		
-		Get getAgent;
-		Post postAgent;
-	
+//		String[] getData = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
+//		String[] postData = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
+//		String[] data = { "post","-v","-h", "Content-Type:application/json", "-d", "{'Assignment': 1}", "http://httpbin.org/post"};
+		String[] data = { "post", "-v","-h", "Content-Type:application/json", "-f", "G:\\workspace\\CNIProject\\dataFile.txt", "https://postman-echo.com/post"};
+//		String[] data = { "post", "-v","-h", "Content-Type:application/json", "-d", "{key1:\"val1\"}", "https://postman-echo.com/post"};
+		Get getAgent = new Get();;
+		Post postAgent = new Post();;
+
 		try {
-			
-			//RequestParameters rp = parser.parse(data);
-			getAgent = new Get();
-			System.out.println("******** GET *******");
-			getAgent.get(parser.parse(getData));
-			System.out.println("******** GET *******");
-			postAgent = new Post();
-			System.out.println("******** POST *******");
-			postAgent.post(parser.parse(postData));
-			System.out.println("******** POST *******");
+			RequestParameters reqParams = parser.parse(data);
+			switch(reqParams.method){
+				case "get":
+					System.out.println("******** GET *******");
+					getAgent.get(reqParams);
+					System.out.println("******** GET *******");
+					break;
+				case "post":
+					System.out.println("******** POST *******");
+					postAgent.post(reqParams);
+					System.out.println("******** POST *******");
+					break;
+				default:
+					break;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -39,6 +44,7 @@ public class RequestManager {
 
 
 
+//RequestParameters rp = parser.parse(data);
 
 
 //String url = "http://www.cs.princeton.edu/courses/archive/spr96/cs333/java/tutorial/networking/urls/urlInfo.html";

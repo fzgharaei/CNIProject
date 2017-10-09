@@ -36,6 +36,13 @@ public class ResponseParameters {
 	public void setResponseHeaders(Map<String, String> responseHeaders) {
 		this.responseHeaders = responseHeaders;
 	}
+	
+	public String getResponseHeaderString(){
+		String result="";
+		for(Map.Entry<String,String> e : this.responseHeaders.entrySet())
+			result+=(e.getKey()+": "+e.getValue()+"\r\n");
+		return result;
+	}
 
 	public String getResponseData() {
 		return responseData;

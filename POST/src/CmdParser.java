@@ -9,6 +9,7 @@ public class CmdParser {
 			reqParams = new RequestParameters();
 			switch(args[0]){
 				case "help":
+					reqParams.setMethod("help");
 					if(args.length>1)
 						switch(args[1]){
 							case "post":
@@ -50,6 +51,7 @@ public class CmdParser {
 						break;
 					}
 				case "post":
+					reqParams.setMethod("post");
 					i=1;
 					boolean dataSourseSet = false;
 					while(i<args.length){
@@ -59,7 +61,8 @@ public class CmdParser {
 							 i++;
 							 break;
 							 
-						 case "-d":
+						 case "-d": 
+						 case "--d":
 							 if(args.length > i+1 && !dataSourseSet){
 								 reqParams.setData(args[i+1]);
 								 i+=2;
@@ -69,17 +72,22 @@ public class CmdParser {
 							 break;
 							 
 						 case "-f":
+						 case "--f":
 							 if(args.length > i+1 && !dataSourseSet){
 								 reqParams.setFile(args[i+1]);
-								 i+=2;
+								 
 								 try{
-									FileReader file = new FileReader(args[i+1]);
+									FileReader file = new FileReader(reqParams.getFile());
 									BufferedReader buff = new BufferedReader(file);
 									String line;
 									String fileData = "";
 									while ((line = buff.readLine()) != null) {
-										fileData+=(line+"\n");
+//										System.out.println(line);
+										if(line.length()!=0)
+											fileData+=(line);
 									}
+//									System.out.println("***********************");
+//									System.out.println(fileData);
 									reqParams.setData(fileData);
 									buff.close();
 									file.close();
@@ -89,6 +97,7 @@ public class CmdParser {
 								 dataSourseSet = true;
 							 }else
 								 throw new Exception("BadSyntax");
+							 i+=2;
 							 break;
 							 
 						 case "-h":
@@ -120,6 +129,7 @@ public class CmdParser {
 					break;
 					
 				case "get":
+					reqParams.setMethod("get");
 					i=1;
 					while(i<args.length){
 						switch(args[i]){
