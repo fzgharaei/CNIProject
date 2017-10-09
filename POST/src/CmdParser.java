@@ -50,6 +50,7 @@ public class CmdParser {
 						System.out.println("Use \"httpc help [command]\" for more information about a command.");
 						break;
 					}
+					break;
 				case "post":
 					reqParams.setMethod("post");
 					i=1;
