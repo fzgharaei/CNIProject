@@ -3,20 +3,22 @@ import java.util.Map;
 
 public class RequestParameters {
 	String method;
-	Map<String,String> headers;
+	Map<String, String> headers;
 	String url;
 	String data;
 	boolean verbose;
-	String file;
-	
+	String inputFile;
+	String outputFile;
+
 	public RequestParameters() {
 		// TODO Auto-generated constructor stub
 		this.method = "";
-		this.url="";
-		this.data="";
-		this.file="";
-		headers = new HashMap<String,String>();
-		verbose=false;
+		this.url = "";
+		this.data = "";
+		this.inputFile = "";
+		this.outputFile = "";
+		headers = new HashMap<String, String>();
+		verbose = false;
 	}
 
 	public String getMethod() {
@@ -26,11 +28,11 @@ public class RequestParameters {
 	public void setMethod(String method) {
 		this.method = method;
 	}
-	
-	public String getHeaderString(){
-		String res ="";
-		for(Map.Entry<String, String> entry : this.headers.entrySet()){
-			res+=entry.getKey()+":"+entry.getValue()+" \r\n";
+
+	public String getHeaderString() {
+		String res = "";
+		for (Map.Entry<String, String> entry : this.headers.entrySet()) {
+			res += entry.getKey() + ":" + entry.getValue() + " \r\n";
 		}
 		return res;
 	}
@@ -67,12 +69,23 @@ public class RequestParameters {
 		this.verbose = verbose;
 	}
 
-	public String getFile() {
-		return file;
+	public String getInputFile() {
+		return this.inputFile;
 	}
 
-	public void setFile(String file) {
-		this.file = file;
+	public void setInputFile(String file) {
+		this.inputFile = file;
 	}
 
+	public String getOutputFile() {
+		return this.outputFile;
+	}
+
+	public void setOutputFile(String file) {
+		this.outputFile = file;
+	}
+
+	public boolean inOutput() {
+		return !this.outputFile.equals("");
+	}
 }

@@ -74,9 +74,9 @@ public class CmdParser {
 						 case "-f":
 						 case "--f":
 							 if(args.length > i+1 && !dataSourseSet){
-								 reqParams.setFile(args[i+1]);
+								 reqParams.setInputFile(args[i+1]);
 								 try{
-									FileReader file = new FileReader(reqParams.getFile());
+									FileReader file = new FileReader(reqParams.getInputFile());
 									BufferedReader buff = new BufferedReader(file);
 									String line;
 									String fileData = "";
@@ -97,23 +97,7 @@ public class CmdParser {
 							 break;
 						 case "-o":
 							 if(args.length > i+1){
-								 reqParams.setFile(args[i+1]);
-								 try{
-									FileReader file = new FileReader(reqParams.getFile());
-									BufferedReader buff = new BufferedReader(file);
-									String line;
-									String fileData = "";
-									while ((line = buff.readLine()) != null) {
-										if(line.length()!=0)
-											fileData+=(line);
-									}
-									reqParams.setData(fileData);
-									buff.close();
-									file.close();
-								 }catch(IOException e){
-									 throw new Exception("The given file doesn't exist or it's unable to be opened");
-								 }
-								 dataSourseSet = true;
+								 reqParams.setOutputFile(args[i+1]);
 							 }else
 								 throw new Exception("BadSyntax");
 							 i+=2;

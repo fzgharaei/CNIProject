@@ -1,5 +1,7 @@
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
@@ -61,7 +63,18 @@ public class Post {
 				response.appendRespondData(line);
 			}
 			
-			if(reqParams.isVerbose()){
+			if(reqParams.inOutput()){
+				try{
+					FileWriter outFile = new FileWriter(reqParams.getOutputFile());
+					BufferedWriter buff = new BufferedWriter(outFile);
+					buff.write(response.getResponseData());
+					buff.append('\n');
+					buff.close();
+					outFile.close();
+				}catch(IOException e){
+					 throw new Exception("Could not open the file!");
+				}
+			}else if(reqParams.isVerbose()){
 				System.out.println("Http Status "+response.getStatus());
 				System.out.println(response.getResponseHeaderString());
 				System.out.println();
