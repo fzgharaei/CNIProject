@@ -1,20 +1,12 @@
 public class RequestManager {
-//	Post postAgent;
-	Get getAgent;
 
 	public static void main(String[] argv) {
 
 		CmdParser parser = new CmdParser();
-//		String[] getData = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
-//		String[] postData = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
-//		String[] data = { "post","-v","-h", "Content-Type:application/json", "-d", "{'Assignment': 1}", "http://httpbin.org/post"};
-		String[] data = { "post", "-v","-h", "Content-Type:application/json", "-f", "G:\\workspace\\CNIProject\\dataFile.txt", "https://postman-echo.com/post"};
-//		String[] data = { "post", "-v","-h", "Content-Type:application/json", "-d", "{key1:\"val1\"}", "https://postman-echo.com/post"};
-		Get getAgent = new Get();;
-		Post postAgent = new Post();;
-
+		Post postAgent = new Post();
+		Get getAgent = new Get();
 		try {
-			RequestParameters reqParams = parser.parse(data);
+			RequestParameters reqParams = parser.parse(argv);
 			switch(reqParams.method){
 				case "get":
 					System.out.println("******** GET *******");
@@ -42,6 +34,11 @@ public class RequestManager {
 
 
 
+//String[] getData = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
+//String[] postData = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
+//String[] data = { "post","-v","-h", "Content-Type:application/json", "-d", "{'Assignment': 1}", "http://httpbin.org/post"};
+//String[] data = { "post", "-v","-h", "Content-Type:application/json", "-f", "G:\\workspace\\CNIProject\\dataFile.txt", "https://postman-echo.com/post"};
+//String[] data = { "post", "-v","-h", "Content-Type:application/json", "-d", "{key1:\"val1\"}", "https://postman-echo.com/post"};
 
 
 //RequestParameters rp = parser.parse(data);
