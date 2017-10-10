@@ -1,7 +1,11 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-
+/**
+ * Parses the Arguments of the Client
+ * @author Fatemah
+ * @since 29/09/2017
+ */
 public class CmdParser {
 		private RequestParameters reqParams;
 		public RequestParameters parse(String[] args) throws Exception{
