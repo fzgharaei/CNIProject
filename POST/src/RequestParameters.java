@@ -15,7 +15,6 @@ public class RequestParameters {
 	String outputFile;
 
 	public RequestParameters() {
-		// TODO Auto-generated constructor stub
 		this.method = "";
 		this.url = "";
 		this.data = "";

@@ -132,7 +132,6 @@ public class CmdParser {
 								 */
 								
 						}
-								//break;
 					}
 					break;
 					
@@ -163,8 +162,10 @@ public class CmdParser {
 				default:
 					throw new Exception("BadSyntax");
 			}
-//			System.out.println(args);
 			reqParams.setUrl(args[args.length-1]);
 			return reqParams;
 		}
 }
+
+
+//System.out.println(args);

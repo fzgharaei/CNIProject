@@ -33,9 +33,6 @@ public class Post {
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;
-//			while ((line = rd.readLine()) != null) {
-//				System.out.println(line);
-//			}
 			while ((line = rd.readLine()) != null) {
 
 				if(line.startsWith("HTTP")){
@@ -48,8 +45,6 @@ public class Post {
 						ArrayList<String> tmp = new ArrayList<String>();
 						for(int i =0;i<temp.length;i++)
 							tmp.add(temp[i]);
-//						for(int ii =0; ii<temp.length; ii++)System.out.println(temp[ii]);
-//						System.out.println("%%%%");
 						if(temp.length<2)
 							tmp.add("");
 						if(tmp.size() != 2) throw new Exception("BadSyntax");
@@ -96,6 +91,13 @@ public class Post {
 
 }
 
+
+//for(int ii =0; ii<temp.length; ii++)System.out.println(temp[ii]);
+//System.out.println("%%%%");
+
+//while ((line = rd.readLine()) != null) {
+//System.out.println(line);
+//}
 //System.out.println(url.getHost());
 			// System.out.println(url.getFile());
 			// System.out.println(data);
