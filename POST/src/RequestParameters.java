@@ -1,6 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
-
+/**
+ * This Model class gets and sets all the parameters provided by the Client 
+ * @author Fatemah
+ * @since 1/10/2017
+ */
 public class RequestParameters {
 	String method;
 	Map<String, String> headers;

@@ -1,3 +1,9 @@
+/**
+ * COMP 6461 - Data Communications & Computer Networks
+ * LAB ASSIGNMENT - 1
+ * @author Rahul Reddy, Fatemah
+ * 
+ */
 public class RequestManager {
 
 	public static void main(String[] argv) {
@@ -22,18 +28,13 @@ public class RequestManager {
 					break;
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 	}
 }
-
-
-
-
-
-
+//String[] getData = { "get","https://httpbin.org/redirect-to?url=http%3A%2F%2Fexample.com%2F" };
+//String[] getData = { "get","-v","https://github.com/Rahulreddy94/HackerEarthSolutions"};
 //String[] getData = { "get", "-v","-h", "Content-Type:application/json","http://httpbin.org/get?course=networking&assignment=1" };
 //String[] postData = { "post", "-v","-h", "Content-Type:application/json", "-d", "{\"username\":\"xyz\",\"password\":\"xyz\"}", "http://posttestserver.com/post.php"};
 //String[] data = { "post","-v","-h", "Content-Type:application/json", "-d", "{'Assignment': 1}", "http://httpbin.org/post"};

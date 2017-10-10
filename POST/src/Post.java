@@ -9,9 +9,9 @@ import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 /**
- * 
- * @author RahulReddy
- *
+ * This class Performs the Http POST functionality only through sockets.
+ * @author Fatemah
+ * @since 25/09/2017
  */
 public class Post {
 	

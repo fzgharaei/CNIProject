@@ -6,9 +6,10 @@ import java.net.Socket;
 import java.net.URL;
 
 /**
- * 
+ * This class Performs the Http GET functionality only through sockets.
  * @author RahulReddy
- *
+ * @Reference https://stackoverflow.com/questions/32086560/get-request-with-java-sockets
+ * @since 24/09/2017
  */
 public class Get {	
 
@@ -48,7 +49,8 @@ public class Get {
 			while ((line = br.readLine()) != null) {
 				if(line.startsWith("HTTP")){
 					String[] temp = line.split(" ");
-					System.out.println(temp[1]);
+					System.out.println("Http Status "+response.getStatus());		
+					
 					if(temp[1].matches("301|302|304")){
 						isRedirect = true;
 						response.setRedirectStatus(temp[1]);
@@ -57,6 +59,7 @@ public class Get {
 				}
 				else if(isRedirect){
 					System.out.println(line);
+					
 					if(line.contains("Location:")){
 						String[] temp = line.split(": ");
 						response.setRedirectUrl(temp[1]);
@@ -65,14 +68,13 @@ public class Get {
 				}
 				else if(requestParams.isVerbose()){
 					System.out.println(line);
-//					isRedirect = false;
 				}
 				else if(line.isEmpty()) {
+					System.out.println("Http Data: ");		
 					while ((line = br.readLine()) != null) {
 						System.out.println(line);
 					}
 					requestParams.verbose = false;
-//					isRedirect = false;
 					break;
 				}	
 			}

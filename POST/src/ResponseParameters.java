@@ -1,9 +1,10 @@
 import java.util.HashMap;
 import java.util.Map;
 /**
- * 
+ * /**
+ * This Model class gets and sets all the parameters provided by the HTTP server 
  * @author RahulReddy
- *
+ * @since 2/10/2017
  */
 public class ResponseParameters {
 	
