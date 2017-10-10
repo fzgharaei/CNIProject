@@ -35,11 +35,9 @@ public class Get {
 			Socket socket = new Socket(address, 80);
 			
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
-			System.out.println(path);
-			System.out.println(host);
-
-			pw.println("GET " + path +" HTTP/1.1");
+			pw.println("GET " + path +" HTTP/1.0");
 			pw.println("Host: " +host);
+			pw.println(requestParams.getHeaderString());
 			pw.println("");
 			pw.flush();
 
@@ -48,14 +46,13 @@ public class Get {
 			
 			while ((line = br.readLine()) != null) {
 				if(line.startsWith("HTTP")){
-					String[] temp = line.split(" ");
-					System.out.println("Http Status "+response.getStatus());		
-					
+					String[] temp = line.split(" ");					
 					if(temp[1].matches("301|302|304")){
 						isRedirect = true;
 						response.setRedirectStatus(temp[1]);
 					}
 					response.setStatus(temp[1]);
+					System.out.println("Http Status "+response.getStatus());
 				}
 				else if(isRedirect){
 					System.out.println(line);
@@ -78,6 +75,7 @@ public class Get {
 					break;
 				}	
 			}
+			pw.close();
 
 			br.close();
 			socket.close();
@@ -92,3 +90,7 @@ public class Get {
 	}
 
 }
+
+//System.out.println(path);
+//System.out.println(host);
+
