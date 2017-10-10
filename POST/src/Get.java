@@ -5,20 +5,34 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 
+/**
+ * 
+ * @author RahulReddy
+ *
+ */
 public class Get {	
 
-	public void get(RequestParameters rp) throws Exception {
+	private Redirect redirectObj;
+	private ResponseParameters response;
+	private URL url;
+	
 
-		// Split the host and get part
-		// get information related to header types
-		// Print verbose
-		try {
-			URL url = new URL(rp.getUrl());
+	public void get(RequestParameters requestParams) throws Exception {
+		
+		if(response == null)
+			response = new ResponseParameters();
+		
+		if(requestParams != null ){
+			url = new URL(requestParams.getUrl());
+		}
+		redirectObj = new Redirect();
+		boolean isRedirect = false;
+		try {	
 			String path = url.getFile();
 			String host = url.getHost();
 			InetAddress address = InetAddress.getByName(host);
-			//
 			Socket socket = new Socket(address, 80);
+			
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			System.out.println(path);
 			System.out.println(host);
@@ -30,23 +44,49 @@ public class Get {
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;
+			
 			while ((line = br.readLine()) != null) {
-				if(rp.isVerbose())// handle output
+				if(line.startsWith("HTTP")){
+					String[] temp = line.split(" ");
+					System.out.println(temp[1]);
+					if(temp[1].matches("301|302|304")){
+						isRedirect = true;
+						response.setRedirectStatus(temp[1]);
+					}
+					response.setStatus(temp[1]);
+				}
+				else if(isRedirect){
 					System.out.println(line);
-				else if(line.isEmpty() && !rp.isVerbose()) {
+					if(line.contains("Location:")){
+						String[] temp = line.split(": ");
+						response.setRedirectUrl(temp[1]);
+						requestParams.setUrl(temp[1]);
+					}
+				}
+				else if(requestParams.isVerbose()){
+					System.out.println(line);
+//					isRedirect = false;
+				}
+				else if(line.isEmpty()) {
 					while ((line = br.readLine()) != null) {
-						//get headers content type values passed by the user 
 						System.out.println(line);
 					}
-					rp.verbose = false;
+					requestParams.verbose = false;
+//					isRedirect = false;
 					break;
-				}
+				}	
 			}
+
 			br.close();
 			socket.close();
+
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		if(isRedirect && response!=null && response.getRedirectStatus().matches("301|302|304")){ 
+			redirectObj.redirect(requestParams,this);
+			}
 	}
 
 }
