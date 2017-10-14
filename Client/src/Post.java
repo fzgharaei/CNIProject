@@ -8,6 +8,7 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
+import HttpMsg.*;
 /**
  * This class Performs the Http POST functionality only through sockets.
  * @author Fatemah

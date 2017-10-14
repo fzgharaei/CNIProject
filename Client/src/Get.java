@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import HttpMsg.*;
 
 /**
  * This class Performs the Http GET functionality only through sockets.
@@ -71,7 +72,7 @@ public class Get {
 					while ((line = br.readLine()) != null) {
 						System.out.println(line);
 					}
-					requestParams.verbose = false;
+					requestParams.setVerbose(false);
 					break;
 				}	
 			}

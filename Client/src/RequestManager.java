@@ -1,3 +1,4 @@
+import HttpMsg.*;
 /**
  * COMP 6461 - Data Communications & Computer Networks
  * LAB ASSIGNMENT - 1
@@ -13,7 +14,7 @@ public class RequestManager {
 		Get getAgent = new Get();
 		try {
 			RequestParameters reqParams = parser.parse(argv);
-			switch(reqParams.method){
+			switch(reqParams.getMethod()){
 				case "get":
 					System.out.println("******** GET *******");
 					getAgent.get(reqParams);
