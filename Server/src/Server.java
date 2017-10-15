@@ -59,7 +59,7 @@ public class Server {
 					try{
 						File mainDir = new File(this.directory);
 						File[] subDirs = mainDir.listFiles();
-//						if(subDirs.)
+//	/					if(subDirs.)
 					}catch(Exception e){
 						//handling file problems
 					}
