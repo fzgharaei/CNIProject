@@ -2,6 +2,7 @@ import java.net.Socket;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -32,7 +33,7 @@ public class Server {
 	public void listen() throws IOException{
 		printLog("Waiting for clients...");
 		currClient = server.accept();
-		printLog("The following client has connected:" + currClient.getInetAddress().getCanonicalHostName());
+		printLog("The following client has connected:" + currClient.getInetAddress());
 	}
 	
 	public void serve() throws IOException{
@@ -40,7 +41,7 @@ public class Server {
 		BufferedWriter respbuff = new BufferedWriter(new OutputStreamWriter(currClient.getOutputStream()));
 		
 		String line = reqbuff.readLine();
-		String response;
+		String response = "";
 		if(line!=null){
 			String[] headline = line.split(" ");
 			if(headline[0] == "GET"){
@@ -58,8 +59,25 @@ public class Server {
 				}else if(!headline[1].equals("HTTP/1.0")){
 					try{
 						File mainDir = new File(this.directory);
-						File[] subDirs = mainDir.listFiles();
-//	/					if(subDirs.)
+						FileReader respFile;
+						String[] subDirs = mainDir.list();
+						for(String s:subDirs){
+							if(s.equals(headline[1].substring(1)))
+								// if(restrictions on file access)
+								try{
+									respFile = new FileReader(headline[1].substring(1));
+									BufferedReader buff = new BufferedReader(respFile);
+									String fileLine;
+									while ((fileLine = buff.readLine()) != null) {
+										if(fileLine.length()!=0)
+											response += (fileLine);
+									}
+									buff.close();
+									respFile.close();
+								 }catch(IOException e){
+									 throw new Exception("The given file doesn't exist or it's unable to be opened");
+								 }
+						}
 					}catch(Exception e){
 						//handling file problems
 					}
