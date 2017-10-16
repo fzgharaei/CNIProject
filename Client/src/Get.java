@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
-import HttpMsg.*;
 
 /**
  * This class Performs the Http GET functionality only through sockets.
@@ -15,30 +14,30 @@ import HttpMsg.*;
 public class Get {	
 
 	private Redirect redirectObj;
-	private ResponseParameters response;
-	private URL url;
+	private Response response;
 	
 
-	public void get(RequestParameters requestParams) throws Exception {
+	public void get(Request request) throws Exception {
 		
 		if(response == null)
-			response = new ResponseParameters();
+			response = new Response();
 		
-		if(requestParams != null ){
-			url = new URL(requestParams.getUrl());
-		}
 		redirectObj = new Redirect();
 		boolean isRedirect = false;
-		try {	
-			String path = url.getFile();
-			String host = url.getHost();
+		try {
+			String path ="";
+			String host= "";
+			if(request != null ){
+				 path = request.getRequestParameters().getPath();
+				 host = new URL(request.getUrl()).getHost();
+			}
 			InetAddress address = InetAddress.getByName(host);
 			Socket socket = new Socket(address, 80);
 			
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			pw.println("GET " + path +" HTTP/1.0");
 			pw.println("Host: " +host);
-			pw.println(requestParams.getHeaderString());
+			pw.println(request.getRequestParameters().getHeaderString());
 			pw.println("");
 			pw.flush();
 
@@ -52,8 +51,8 @@ public class Get {
 						isRedirect = true;
 						response.setRedirectStatus(temp[1]);
 					}
-					response.setStatus(temp[1]);
-					System.out.println("Http Status "+response.getStatus());
+					response.getResponseParameters().setStatus(temp[1]);
+					System.out.println("Http Status "+response.getResponseParameters().getStatus());
 				}
 				else if(isRedirect){
 					System.out.println(line);
@@ -61,10 +60,10 @@ public class Get {
 					if(line.contains("Location:")){
 						String[] temp = line.split(": ");
 						response.setRedirectUrl(temp[1]);
-						requestParams.setUrl(temp[1]);
+						request.setUrl(temp[1]);
 					}
 				}
-				else if(requestParams.isVerbose()){
+				else if(request.isVerbose()){
 					System.out.println(line);
 				}
 				else if(line.isEmpty()) {
@@ -72,7 +71,7 @@ public class Get {
 					while ((line = br.readLine()) != null) {
 						System.out.println(line);
 					}
-					requestParams.setVerbose(false);
+					request.setVerbose(false);
 					break;
 				}	
 			}
@@ -86,7 +85,7 @@ public class Get {
 		}
 		
 		if(isRedirect && response!=null && response.getRedirectStatus().matches("301|302|304")){ 
-			redirectObj.redirect(requestParams,this);
+			redirectObj.redirect(request,this);
 			}
 	}
 

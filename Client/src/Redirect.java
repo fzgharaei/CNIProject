@@ -1,4 +1,3 @@
-import HttpMsg.*;
 /**
  * This class Performs the HTTP GET Redirect functionality only through sockets.
  * @author RahulReddy
@@ -7,7 +6,7 @@ import HttpMsg.*;
 public class Redirect {
 	Get get;
 
-	public void redirect(RequestParameters request, Get getObject) {
+	public void redirect(Request request, Get getObject) {
 		System.out.println("********************");
 		System.out.println("Redirection should be done to Location:"+ request.getUrl() + "\r\n");
 		System.out.println("********************");

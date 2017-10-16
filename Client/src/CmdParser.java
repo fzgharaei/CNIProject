@@ -1,5 +1,4 @@
 import java.io.BufferedReader;
-import HttpMsg.*;
 import java.io.FileReader;
 import java.io.IOException;
 /**
@@ -8,13 +7,13 @@ import java.io.IOException;
  * @since 29/09/2017
  */
 public class CmdParser {
-		private RequestParameters reqParams;
-		public RequestParameters parse(String[] args) throws Exception{
+		private Request request;
+		public Request parse(String[] args) throws Exception{
 			int i;
-			reqParams = new RequestParameters();
+			request = new Request();
 			switch(args[0]){
 				case "help":
-					reqParams.setMethod("help");
+					request.getRequestParameters().setMethod("help");
 					if(args.length>1)
 						switch(args[1]){
 							case "post":
@@ -57,20 +56,20 @@ public class CmdParser {
 					}
 					break;
 				case "post":
-					reqParams.setMethod("post");
+					request.getRequestParameters().setMethod("post");
 					i=1;
 					boolean dataSourseSet = false;
 					while(i<args.length){
 						switch(args[i]){
 						 case "-v":
-							 reqParams.setVerbose(true);
+							 request.setVerbose(true);
 							 i++;
 							 break;
 							 
 						 case "-d": 
 						 case "--d":
 							 if(args.length > i+1 && !dataSourseSet){
-								 reqParams.setData(args[i+1]);
+								 request.getRequestParameters().setData(args[i+1]);
 								 i+=2;
 								 dataSourseSet = true;
 							 }else
@@ -80,9 +79,9 @@ public class CmdParser {
 						 case "-f":
 						 case "--f":
 							 if(args.length > i+1 && !dataSourseSet){
-								 reqParams.setInputFile(args[i+1]);
+								 request.setInputFile(args[i+1]);
 								 try{
-									FileReader file = new FileReader(reqParams.getInputFile());
+									FileReader file = new FileReader(request.getInputFile());
 									BufferedReader buff = new BufferedReader(file);
 									String line;
 									String fileData = "";
@@ -90,7 +89,7 @@ public class CmdParser {
 										if(line.length()!=0)
 											fileData+=(line);
 									}
-									reqParams.setData(fileData);
+									request.getRequestParameters().setData(fileData);
 									buff.close();
 									file.close();
 								 }catch(IOException e){
@@ -103,7 +102,7 @@ public class CmdParser {
 							 break;
 						 case "-o":
 							 if(args.length > i+1){
-								 reqParams.setOutputFile(args[i+1]);
+								 request.setOutputFile(args[i+1]);
 							 }else
 								 throw new Exception("BadSyntax");
 							 i+=2;
@@ -115,8 +114,8 @@ public class CmdParser {
 							 	 if(temp.length !=2)
 							 		throw new Exception("BadSyntax");
 							 	 else{
-							 		 reqParams.addHeader(temp[0], temp[1]);
-							 		 i+=2;
+							 		request.getRequestParameters().addHeader(temp[0], temp[1]);
+							 		i+=2;
 								 }
 							 }else
 								 throw new Exception("BadSyntax");
@@ -124,7 +123,7 @@ public class CmdParser {
 							 break;
 
 							default: 
-								reqParams.setUrl(args[args.length-1]);
+								request.setUrl(args[args.length-1]);
 								i = args.length;
 								break;
 								
@@ -137,12 +136,12 @@ public class CmdParser {
 					break;
 					
 				case "get":
-					reqParams.setMethod("get");
+					request.getRequestParameters().setMethod("get");
 					i=1;
 					while(i<args.length){
 						switch(args[i]){
 						 case "-v":
-							 reqParams.setVerbose(true);
+							 request.setVerbose(true);
 							 i++;
 							 break;
 						case "-h":
@@ -151,7 +150,7 @@ public class CmdParser {
 							 	 if(temp.length !=2)
 							 		throw new Exception("BadSyntax");
 							 	 else{
-							 		 reqParams.addHeader(temp[0], temp[1]);
+							 		request.getRequestParameters().addHeader(temp[0], temp[1]);
 							 		 i+=2;
 								 }
 							 }else
@@ -163,8 +162,8 @@ public class CmdParser {
 				default:
 					throw new Exception("BadSyntax");
 			}
-			reqParams.setUrl(args[args.length-1]);
-			return reqParams;
+			request.setUrl(args[args.length-1]);
+			return request;
 		}
 }
 

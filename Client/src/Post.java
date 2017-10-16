@@ -16,9 +16,8 @@ import HttpMsg.*;
  */
 public class Post {
 	
-	public void post(RequestParameters reqParams) throws Exception {
-		
-		URL url = new URL(reqParams.getUrl());
+	public void post(Request request) throws Exception {
+		URL url = new URL(request.getUrl());
 		InetAddress address = InetAddress.getByName(url.getHost());
 		ResponseParameters response =  new ResponseParameters();
 		Socket socket;
@@ -26,10 +25,10 @@ public class Post {
 			socket = new Socket(address, 80);
 			BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
 			wr.write("POST " + url.getFile() + " HTTP/1.0\r\n");
-			wr.write("Content-Length: " + reqParams.getData().length() + "\r\n");
-			wr.write(reqParams.getHeaderString() + "\r\n");
+			wr.write("Content-Length: " + request.getRequestParameters().getData().length() + "\r\n");
+			wr.write(request.getRequestParameters().getHeaderString() + "\r\n");
 			wr.write("\r\n");
-			wr.write(reqParams.getData());
+			wr.write(request.getRequestParameters().getData());
 			wr.flush();
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -59,9 +58,9 @@ public class Post {
 				response.appendRespondData(line);
 			}
 			
-			if(reqParams.inOutput()){
+			if(request.inOutput()){
 				try{
-					FileWriter outFile = new FileWriter(reqParams.getOutputFile());
+					FileWriter outFile = new FileWriter(request.getOutputFile());
 					BufferedWriter buff = new BufferedWriter(outFile);
 					buff.write(response.getResponseData());
 					buff.append('\n');
@@ -70,8 +69,8 @@ public class Post {
 				}catch(IOException e){
 					 throw new Exception("Could not open the file!");
 				}
-				System.out.println("Data Received is successfully saved in " + reqParams.getOutputFile());
-			}else if(reqParams.isVerbose()){
+				System.out.println("Data Received is successfully saved in " + request.getOutputFile());
+			}else if(request.isVerbose()){
 				System.out.println("Http Status "+response.getStatus());
 				System.out.println(response.getResponseHeaderString());
 				System.out.println();

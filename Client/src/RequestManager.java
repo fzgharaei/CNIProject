@@ -1,4 +1,3 @@
-import HttpMsg.*;
 /**
  * COMP 6461 - Data Communications & Computer Networks
  * LAB ASSIGNMENT - 1
@@ -13,16 +12,16 @@ public class RequestManager {
 		Post postAgent = new Post();
 		Get getAgent = new Get();
 		try {
-			RequestParameters reqParams = parser.parse(argv);
-			switch(reqParams.getMethod()){
+			Request request = parser.parse(argv);
+			switch(request.getRequestParameters().getMethod()){
 				case "get":
 					System.out.println("******** GET *******");
-					getAgent.get(reqParams);
+					getAgent.get(request);
 					System.out.println("******** GET *******");
 					break;
 				case "post":
 					System.out.println("******** POST *******");
-					postAgent.post(reqParams);
+					postAgent.post(request);
 					System.out.println("******** POST *******");
 					break;
 				default:
@@ -42,7 +41,7 @@ public class RequestManager {
 //String[] data = { "post", "-v","-h", "Content-Type:application/json", "-f", "G:\\workspace\\CNIProject\\dataFile.txt", "https://postman-echo.com/post"};
 //String[] data = { "post", "-v","-h", "Content-Type:application/json", "-d", "{key1:\"val1\"}", "https://postman-echo.com/post"};
 
-
+// get -v -h Content-Type:application/json http://httpbin.org/get?course=networking&assignment=1
 //RequestParameters rp = parser.parse(data);
 
 
