@@ -7,10 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 
-import HttpMsg.*;
 public class Server {
 	int port;
 //    private static final Logger logger = LoggerFactory.getLogger(Server.class);
