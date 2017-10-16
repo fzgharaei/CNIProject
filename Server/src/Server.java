@@ -3,9 +3,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 
 public class Server {
@@ -81,8 +83,42 @@ public class Server {
 				}else{
 					// handling no directory given exception
 				}
-			}else if(headline[0] == "POST"){
+			}else if(headline[0].equals("POST")){
 				
+				try {
+					
+					File mainDir = new File(this.directory);
+					String[] filesList = mainDir.list();
+					boolean isFound = false;
+					for(String name : filesList){
+						if(name.equals(headline[1].substring(1))){
+							isFound = true;
+							break;
+						}
+						else
+							isFound = false;
+					}
+						if(isFound){
+							//file is present in the directory
+							PrintWriter writer = new PrintWriter(headline[1].substring(1), "UTF-8");
+							//capture The data by reading the buffer after encountering \r\n in the request
+							writer.println("some data");
+							writer.close();
+						}
+						else{
+							//create a new file in the server directory
+							File newFile = new File(mainDir.getPath() + "/" + headline[1].substring(1));
+							FileWriter writer = new FileWriter(newFile);
+							BufferedWriter bw = new BufferedWriter(writer);
+							//capture The data by reading the buffer after encountering \r\n in the request
+							bw.write("some data");
+							bw.close();
+						}
+					// write response to socket
+					
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			else{
 				// write bad syntax on socket and listen again(don't know how yet!)

@@ -22,7 +22,9 @@ public class Post {
 		ResponseParameters response =  new ResponseParameters();
 		Socket socket;
 		try {
-			socket = new Socket(address, 80);
+			socket = new Socket(address, 8080);
+			System.out.println(url.getHost());
+			System.out.println(url.getFile());
 			BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
 			wr.write("POST " + url.getFile() + " HTTP/1.0\r\n");
 			wr.write("Content-Length: " + request.getRequestParameters().getData().length() + "\r\n");

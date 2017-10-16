@@ -1,6 +1,9 @@
 
 public enum HttpStatus {
-	OK(200,"OK"), NFOUND(404, "Not Found"), NMODIFIED(304, "Not Modified");
+	OK(200,"OK"), 
+	NFOUND(404, "Not Found"), 
+	NMODIFIED(304, "Not Modified");
+	
 	private int value;
 	private String msg;
 	HttpStatus(int stat, String message){
