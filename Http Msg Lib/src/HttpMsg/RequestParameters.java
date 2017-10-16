@@ -9,20 +9,14 @@ import java.util.Map;
 public class RequestParameters {
 	String method;
 	Map<String, String> headers;
-	String url;
+	String path;
 	String data;
-	boolean verbose;
-	String inputFile;
-	String outputFile;
+	
 
 	public RequestParameters() {
 		this.method = "";
-		this.url = "";
 		this.data = "";
-		this.inputFile = "";
-		this.outputFile = "";
 		headers = new HashMap<String, String>();
-		verbose = false;
 	}
 
 	public String getMethod() {
@@ -49,14 +43,6 @@ public class RequestParameters {
 		this.headers.put(key, value);
 	}
 
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public String getData() {
 		return data;
 	}
@@ -65,31 +51,11 @@ public class RequestParameters {
 		this.data = data;
 	}
 
-	public boolean isVerbose() {
-		return verbose;
+	public void setPath(String path){
+		this.path = path;
 	}
-
-	public void setVerbose(boolean verbose) {
-		this.verbose = verbose;
-	}
-
-	public String getInputFile() {
-		return this.inputFile;
-	}
-
-	public void setInputFile(String file) {
-		this.inputFile = file;
-	}
-
-	public String getOutputFile() {
-		return this.outputFile;
-	}
-
-	public void setOutputFile(String file) {
-		this.outputFile = file;
-	}
-
-	public boolean inOutput() {
-		return !this.outputFile.equals("");
+	
+	public String getPath(){
+		return this.path;
 	}
 }

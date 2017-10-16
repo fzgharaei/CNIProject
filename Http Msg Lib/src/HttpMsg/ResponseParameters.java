@@ -12,15 +12,13 @@ public class ResponseParameters {
 	private String status;
 	private Map<String,String> responseHeaders;
 	private String responseData;
-	private String redirectUrl;
-	private String redirectStatus;
+	
 	
 	public ResponseParameters() {
 		responseHeaders =  new HashMap<String,String>();
 		this.responseData = "";
 		this.status = "";
-		this.redirectStatus = "";
-		this.redirectUrl = "";
+		
 	}
 	
 	public String getStatus() {
@@ -62,19 +60,5 @@ public class ResponseParameters {
 		this.responseData += (appendString+'\n');
 	}
 	
-	public String getRedirectUrl() {
-		return redirectUrl;
-	}
 
-	public void setRedirectUrl(String redirectUrl) {
-		this.redirectUrl = redirectUrl;
-	}
-
-	public String getRedirectStatus() {
-		return redirectStatus;
-	}
-
-	public void setRedirectStatus(String redirectStatus) {
-		this.redirectStatus = redirectStatus;
-	}
 }
