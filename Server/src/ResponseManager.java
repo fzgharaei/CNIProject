@@ -1,5 +1,4 @@
 import java.util.HashMap;
-
 /**
  * 
  * @author RahulReddy
@@ -7,7 +6,12 @@ import java.util.HashMap;
  */
 public class ResponseManager {
 	public static void main(String[] args) throws Exception{
-		String[] data = {"-v","-p","8080","-d","../"};
+		//Mon, 16 Oct 2017 02:01:32 GMT
+		//Sun Oct 15 22:01:54 EDT 2017
+		//	16 Oct 2017 02:02:40 GMT
+
+//		System.out.println(date.);
+				String[] data = {"-v","-p","8080","-d","../"};
 		ServerCmdParser parser = new ServerCmdParser();
 		HashMap<String, String> input = parser.parse(data);
 		System.out.println(Integer.parseInt(input.get("port")));
