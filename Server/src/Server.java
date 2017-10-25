@@ -1,7 +1,11 @@
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -29,6 +33,7 @@ public class Server {
 		this.server = new ServerSocket(this.port);
 		printLog("Starting the socket server at port:" + this.port);
 	}
+	
 	public void listen() throws IOException{
 		printLog("Waiting for clients...");
 		currClient = server.accept();
@@ -98,15 +103,29 @@ public class Server {
 						else
 							isFound = false;
 					}
-						if(isFound){
-							//file is present in the directory
-							PrintWriter writer = new PrintWriter(headline[1].substring(1), "UTF-8");
-							//capture The data by reading the buffer after encountering \r\n in the request
-							writer.println("some data");
-							writer.close();
+					// filename is found and name is not a directory
+					if(isFound && !(new File(mainDir.getPath() + "/" +headline[1].substring(1)).isDirectory())){
+						try {
+							while ((line = reqbuff.readLine()) != null ) {
+								System.out.println(line);
+							    Files.write(Paths.get(mainDir.getPath()+headline[1]), line.getBytes(), StandardOpenOption.APPEND);
+							    
+								if(line.equals("")) {
+									String temp = reqbuff.readLine();
+									System.out.println(temp);
+									
+									if (line != null ) {
+									    Files.write(Paths.get(mainDir.getPath()+headline[1]), line.getBytes(), StandardOpenOption.APPEND);
+										System.out.println(line);
+										
+									}
+								}
+							}
+						}catch (Exception e) {
+							e.printStackTrace();
+							}
 						}
 						else{
-							//create a new file in the server directory
 							File newFile = new File(mainDir.getPath() + "/" + headline[1].substring(1));
 							FileWriter writer = new FileWriter(newFile);
 							BufferedWriter bw = new BufferedWriter(writer);
@@ -125,19 +144,18 @@ public class Server {
 			}
 				
 		}
-		while ((line = reqbuff.readLine()) != null) {
-			
-		}
+//		while ((line = reqbuff.readLine()) != null) {
+//			System.out.println(line);
+//		}
 	}
-	
-	
-	
+		
 	public void printLog(String logMsg){
 		if(log)
 			System.out.println(logMsg);
 		else
 			return;
 	}
+	
 	public void shutdown(){
 		this.running = false;
 	}

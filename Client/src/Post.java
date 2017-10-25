@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
@@ -25,13 +26,17 @@ public class Post {
 			socket = new Socket(address, 8080);
 			System.out.println(url.getHost());
 			System.out.println(url.getFile());
-			BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
-			wr.write("POST " + url.getFile() + " HTTP/1.0\r\n");
-			wr.write("Content-Length: " + request.getRequestParameters().getData().length() + "\r\n");
-			wr.write(request.getRequestParameters().getHeaderString() + "\r\n");
-			wr.write("\r\n");
-			wr.write(request.getRequestParameters().getData());
-			wr.flush();
+			//BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
+			PrintWriter requestWriter = new PrintWriter(socket.getOutputStream());
+
+			requestWriter.print("POST " + url.getFile() + " HTTP/1.0\r\n");
+			requestWriter.print("Content-Length: " + request.getRequestParameters().getData().length() + "\r\n");
+			requestWriter.print(request.getRequestParameters().getHeaderString());
+			requestWriter.print("Accept-Language: en-us\r\n");
+			requestWriter.print("Connection: Keep-Alive\r\n");
+			requestWriter.print("\r\n\r\n");
+			requestWriter.print(request.getRequestParameters().getData()+ "\r\n");
+			requestWriter.flush();
 
 			BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;
@@ -83,7 +88,7 @@ public class Post {
 				System.out.println(response.getResponseData());
 			}
 			
-			wr.close();
+			requestWriter.close();
 			rd.close();
 			socket.close();
 
