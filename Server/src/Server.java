@@ -48,7 +48,8 @@ public class Server {
 		BufferedWriter respbuff = new BufferedWriter(new OutputStreamWriter(currClient.getOutputStream()));
 		
 		String line = reqbuff.readLine();
-		String response = "";
+		HttpStatus hs = null;
+		String responsebody = "";
 		if(line!=null){
 			String[] headline = line.split(" ");
 			if(headline[0].equals("GET")){
@@ -57,10 +58,11 @@ public class Server {
 //						File mainDir = new File(this.directory);
 //						String[] subDirNames = mainDir.list();
 						ArrayList<String> subDirNames = serverDirectory.filesList();
-						response = "Files and Directories in Server Main Dir are as follow:";
+						responsebody = "Files and Directories in Server Main Dir are as follow:";
 						for(String s:subDirNames)
-							response += s +"\n";
+							responsebody += s +"\n";
 						// write response to socket
+						hs = HttpStatus.OK;
 					}catch(Exception e){
 						// proper exception needed
 					}
@@ -79,7 +81,7 @@ public class Server {
 									String fileLine;
 									while ((fileLine = buff.readLine()) != null) {
 										if(fileLine.length()!=0)
-											response += (fileLine);
+											responsebody += (fileLine);
 									}
 									buff.close();
 									respFile.close();
@@ -123,11 +125,15 @@ public class Server {
 							String data = returnAppendData(reqbuff);
 							if (data != null) {
 								bw.write(data);
+								responsebody = data;
+							}else{
+								responsebody = "No post body!";
 							}
+							
 							bw.close();
 						}
 					// write response to socket
-					
+//					responsebuilder(responsebody,)
 				}	catch (Exception e) {
 					e.printStackTrace();
 				}
