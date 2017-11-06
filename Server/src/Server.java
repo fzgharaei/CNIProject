@@ -22,11 +22,13 @@ public class Server {
 	String directory;
 	ServerSocket server;
 	Socket currClient = null;
+	FileDirectory serverDirectory;
 	Server(int port, boolean verbose, String dir){
 		this.port = port;
 		this.log = verbose;
 		this.directory = dir;
 		this.running = true;
+		serverDirectory = new FileDirectory(this.directory);
 	}
 	
 	public void init() throws IOException{
