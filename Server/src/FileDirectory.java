@@ -41,6 +41,15 @@ public class FileDirectory {
 		}
 		return false;
 	}
+	
+	ArrayList<String>filesList(){
+		ArrayList<String> res = new ArrayList<String>();
+		for(DFile f:files){
+			if(f.isAccessible())
+				res.add(f.address);
+		}
+		return res;
+	}
 }
 
 //https://alvinalexander.com/blog/post/java/how-find-string-simple-regex-pattern-matcher
