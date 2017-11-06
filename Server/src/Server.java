@@ -2,6 +2,7 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.ArrayList;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -53,8 +54,9 @@ public class Server {
 			if(headline[0].equals("GET")){
 				if(headline[1].equals("/") ){
 					try{
-						File mainDir = new File(this.directory);
-						String[] subDirNames = mainDir.list();
+//						File mainDir = new File(this.directory);
+//						String[] subDirNames = mainDir.list();
+						ArrayList<String> subDirNames = serverDirectory.filesList();
 						response = "Files and Directories in Server Main Dir are as follow:";
 						for(String s:subDirNames)
 							response += s +"\n";
@@ -66,9 +68,9 @@ public class Server {
 					try{
 						File mainDir = new File(this.directory);
 						FileReader respFile;
-						String[] subDirs = mainDir.list();
+//						String[] subDirs = mainDir.list();
+						ArrayList<String> subDirs = serverDirectory.filesList();
 						for(String s:subDirs){
-							String temp = headline[1].substring(1);
 							if(s.equals(headline[1].substring(1)))
 								// if(restrictions on file access)
 								try{
