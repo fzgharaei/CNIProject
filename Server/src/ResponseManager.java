@@ -1,4 +1,6 @@
 import java.util.HashMap;
+
+import HttpMsg.RequestParameters;
 /**
  * 
  * @author RahulReddy
@@ -11,7 +13,7 @@ public class ResponseManager {
 		//	16 Oct 2017 02:02:40 GMT
 
 //		System.out.println(date.);
-				String[] data = {"-v","-p","8080","-d","../"};
+		String[] data = {"-v","-p","8080","-d","../"};
 		ServerCmdParser parser = new ServerCmdParser();
 		HashMap<String, String> input = parser.parse(data);
 		System.out.println(Integer.parseInt(input.get("port")));
