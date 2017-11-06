@@ -2,7 +2,9 @@ import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -133,7 +135,8 @@ public class Server {
 							bw.close();
 						}
 					// write response to socket
-//					responsebuilder(responsebody,)
+					String finalResponse = HttpResponseBuilder(responsebody,hs);
+					
 				}	catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -162,6 +165,40 @@ public class Server {
 		return stringBuilder.toString();
 	}
 
+	public String HttpResponseBuilder(String respBody, HttpStatus hs){
+		String response = "";
+		if (hs.equals(HttpStatus.OK)) {
+
+			response += hs.toString() + "\r\n";
+			response += "Date:" + getTimeStamp() + "\r\n";
+			response += "Server: localhost\r\n";
+			response += "Content-Type: text/html\r\n";
+			response += "Connection: Closed\r\n\r\n";
+
+		} else if (hs.equals(HttpStatus.NFOUND)) {
+
+			response += hs.toString() + "\r\n";
+			response += "Date:" + getTimeStamp() + "\r\n";
+			response += "Server: localhost\r\n";
+			response += "\r\n";
+		} else if (hs.equals(HttpStatus.NMODIFIED)) {
+			
+			response += hs.toString() + "\r\n";
+			response += "Date:" + getTimeStamp() + "\r\n";
+			response += "Server: localhost\r\n";
+			response += "\r\n";
+		}
+		if(respBody!=null)
+			response += respBody + "\r\n";
+		
+		return response;
+	}
+	private static String getTimeStamp() {
+		Date date = new Date();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy h:mm:ss a");
+		String formattedDate = sdf.format(date);
+		return formattedDate;
+	}
 	public void printLog(String logMsg){
 		if(log)
 			System.out.println(logMsg);
