@@ -32,7 +32,7 @@ public class Get {
 				 host = new URL(request.getUrl()).getHost();
 			}
 			InetAddress address = InetAddress.getByName(host);
-			Socket socket = new Socket(address, 80);
+			Socket socket = new Socket(address, 8080);
 			
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			pw.println("GET " + path +" HTTP/1.0");

@@ -42,7 +42,7 @@ public class RequestManager {
 //String[] data = { "post", "-v","-h", "Content-Type:application/json", "-d", "{key1:\"val1\"}", "https://postman-echo.com/post"};
 
 //post -v -h Content-Type:application/json -d {\"username\":\"xyz\",\"password\":\"xyz\"} "http://posttestserver.com/post.php"
-//post -v -h Content-Type:application/json -d {\"username\":\"xyz\",\"password\":\"xyz\"} "http://localhost:8080/post.txt"
+//get -v -h Content-Type:application/json "http://localhost:8080/post.txt"
 // post -v -h Content-Type:application/json -d "CONTENT=HELLO JSP !&ONEMORECONTENT =HELLO POST!" "http://localhost:8080/post.txt"
 //javac -cp ".;S:\CN\CNIProject\HTTPMSG.jar" RequestManager.java post -v -h Content-Type:application/json -d {\"username\":\"xyz\",\"password\":\"xyz\"} "http://localhost:8080/post.txt"
 //java -cp ".;S:\CN\CNIProject\HTTPMSG.jar" RequestManager post -v -h Content-Type:application/json -d {\"username\":\"xyz\",\"password\":\"xyz\"} "http://localhost:8080/post.txt"

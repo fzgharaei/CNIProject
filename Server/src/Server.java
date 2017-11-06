@@ -48,7 +48,7 @@ public class Server {
 		String response = "";
 		if(line!=null){
 			String[] headline = line.split(" ");
-			if(headline[0] == "GET"){
+			if(headline[0].equals("GET")){
 				if(headline[1].equals("/") ){
 					try{
 						File mainDir = new File(this.directory);
@@ -66,10 +66,11 @@ public class Server {
 						FileReader respFile;
 						String[] subDirs = mainDir.list();
 						for(String s:subDirs){
+							String temp = headline[1].substring(1);
 							if(s.equals(headline[1].substring(1)))
 								// if(restrictions on file access)
 								try{
-									respFile = new FileReader(headline[1].substring(1));
+									respFile = new FileReader(mainDir.getPath() + "/" + headline[1].substring(1));
 									BufferedReader buff = new BufferedReader(respFile);
 									String fileLine;
 									while ((fileLine = buff.readLine()) != null) {
@@ -91,7 +92,6 @@ public class Server {
 			}else if(headline[0].equals("POST")){
 				
 				try {
-					
 					File mainDir = new File(this.directory);
 					String[] filesList = mainDir.list();
 					boolean isFound = false;
@@ -103,52 +103,55 @@ public class Server {
 						else
 							isFound = false;
 					}
+					
 					// filename is found and name is not a directory
 					if(isFound && !(new File(mainDir.getPath() + "/" +headline[1].substring(1)).isDirectory())){
-						try {
-							while ((line = reqbuff.readLine()) != null ) {
-								System.out.println(line);
-							    Files.write(Paths.get(mainDir.getPath()+headline[1]), line.getBytes(), StandardOpenOption.APPEND);
-							    
-								if(line.equals("")) {
-									String temp = reqbuff.readLine();
-									System.out.println(temp);
-									
-									if (line != null ) {
-									    Files.write(Paths.get(mainDir.getPath()+headline[1]), line.getBytes(), StandardOpenOption.APPEND);
-										System.out.println(line);
-										
-									}
-								}
-							}
-						}catch (Exception e) {
-							e.printStackTrace();
-							}
+						String data = returnAppendData(reqbuff);
+							if (data != null ) {
+								Files.write(Paths.get(mainDir.getPath()+headline[1]), data.getBytes(), StandardOpenOption.APPEND);
+							}	
 						}
 						else{
 							File newFile = new File(mainDir.getPath() + "/" + headline[1].substring(1));
 							FileWriter writer = new FileWriter(newFile);
 							BufferedWriter bw = new BufferedWriter(writer);
 							//capture The data by reading the buffer after encountering \r\n in the request
-							bw.write("some data");
+							String data = returnAppendData(reqbuff);
+							if (data != null) {
+								bw.write(data);
+							}
 							bw.close();
 						}
 					// write response to socket
 					
-				}catch (Exception e) {
+				}	catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 			else{
 				// write bad syntax on socket and listen again(don't know how yet!)
-			}
-				
+			}	
 		}
-//		while ((line = reqbuff.readLine()) != null) {
-//			System.out.println(line);
-//		}
 	}
 		
+	private String returnAppendData(BufferedReader reqbuff) {
+		String line= "";
+		StringBuilder stringBuilder = null;
+			
+			try {
+				while ((line = reqbuff.readLine()) != null ) {
+					System.out.println(line);  
+				    stringBuilder = new StringBuilder();
+					if(line.equals("\r\n\r\n"))
+						while((line = reqbuff.readLine()) != null)
+							stringBuilder.append(line + "\n");
+					}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		return stringBuilder.toString();
+	}
+
 	public void printLog(String logMsg){
 		if(log)
 			System.out.println(logMsg);
