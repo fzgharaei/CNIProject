@@ -134,9 +134,12 @@ public class Server {
 							
 							bw.close();
 						}
-					// write response to socket
+					// make response headers, append to response body and write response to socket
 					String finalResponse = HttpResponseBuilder(responsebody,hs);
-					
+					respbuff.write(finalResponse);
+					respbuff.flush();
+					responsebody = "";
+					respbuff.close();
 				}	catch (Exception e) {
 					e.printStackTrace();
 				}
