@@ -2,7 +2,8 @@
 public enum HttpStatus {
 	OK(200,"OK"), 
 	NFOUND(404, "Not Found"), 
-	NMODIFIED(304, "Not Modified");
+	NMODIFIED(304, "Not Modified"),
+	FORBIDDEN(403,"Access is Forbidden");
 	
 	private int value;
 	private String msg;
