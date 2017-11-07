@@ -38,7 +38,7 @@ public class Get {
 			pw.println("GET " + path +" HTTP/1.0");
 			pw.println("Host: " +host);
 			pw.println(request.getRequestParameters().getHeaderString());
-			pw.println("");
+			pw.println("\r\n");
 			pw.flush();
 
 			BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));

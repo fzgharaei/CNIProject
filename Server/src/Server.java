@@ -8,13 +8,11 @@ import java.util.Date;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.ServerSocket;
 
 public class Server {
@@ -76,8 +74,19 @@ public class Server {
 						ArrayList<String> subDirs = serverDirectory.filesList();
 						for(String s:subDirs){
 							if(s.equals(headline[1].substring(1)))
-								// if(restrictions on file access)
-								try{
+							{
+								if(!serverDirectory.fileExist(headline[1].substring(1)))
+								{
+									hs = HttpStatus.NFOUND;
+									responsebody += "File Not Found on the Server \r\n";
+								}
+								else if(!serverDirectory.isAccessible(headline[1].substring(1)))
+								{
+									hs = HttpStatus.FORBIDDEN;
+									responsebody += "Access to the File is Forbidden \r\n";
+								}
+								else
+									try{
 									respFile = new FileReader(mainDir.getPath() + "/" + headline[1].substring(1));
 									BufferedReader buff = new BufferedReader(respFile);
 									String fileLine;
@@ -85,11 +94,13 @@ public class Server {
 										if(fileLine.length()!=0)
 											responsebody += (fileLine);
 									}
+									hs = HttpStatus.OK;
 									buff.close();
 									respFile.close();
 								 }catch(IOException e){
 									 throw new Exception("The given file doesn't exist or it's unable to be opened");
 								 }
+							}
 						}
 					}catch(Exception e){
 						//handling file problems
@@ -100,32 +111,85 @@ public class Server {
 			}else if(headline[0].equals("POST")){
 				
 				try {
-					File mainDir = new File(this.directory);
-					String[] filesList = mainDir.list();
+					//File mainDir = new File(this.directory);
+					//String[] filesList = mainDir.list();
+					ArrayList<String> subDirs = serverDirectory.filesList();
 					boolean isFound = false;
-					for(String name : filesList){
+					for(String name : subDirs){
+						//if(serverDirectory.fileExist(headline[1].substring(1))){
+						
 						if(name.equals(headline[1].substring(1))){
 							isFound = true;
 							break;
 						}
 						else
 							isFound = false;
+						
 					}
 					
+					String data = "";
+					String temp = "";
 					// filename is found and name is not a directory
-					if(isFound && !(new File(mainDir.getPath() + "/" +headline[1].substring(1)).isDirectory())){
-						String data = returnAppendData(reqbuff);
-							if (data != null ) {
-								Files.write(Paths.get(mainDir.getPath()+headline[1]), data.getBytes(), StandardOpenOption.APPEND);
-							}	
+					
+					if(isFound && !(new File(this.directory + "/" +headline[1].substring(1)).isDirectory())){
+						
+						
+						if(serverDirectory.isAccessible(headline[1].substring(1)))
+						{
+						/*	String data = returnAppendData(reqbuff);
+							if (data != null ) 
+							{
+								//Files.write(Paths.get(mainDir.getPath()+headline[1]), data.getBytes(), StandardOpenOption.APPEND);
+								Files.write(Paths.get(this.directory + headline[1]), data.getBytes(), StandardOpenOption.APPEND);
+							}*/
+							while ((line = reqbuff.readLine()) != null ) {
+//								System.out.println(line);
+							    Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);
+							     
+								if(line.equals("")) 
+								{
+									temp = reqbuff.readLine();
+									System.out.println(temp);
+									data = temp + "\n";
+									if (line != null ) 
+									{
+									    Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);										 
+									} 
+								} 
+							} 
+							hs= HttpStatus.OK;
+						}else
+						{
+							hs = HttpStatus.FORBIDDEN;
+							responsebody += "Access to the File is Forbidden \r\n";
 						}
+					}
 						else{
-							File newFile = new File(mainDir.getPath() + "/" + headline[1].substring(1));
+							//File newFile = new File(mainDir.getPath() + "/" + headline[1].substring(1));
+							File newFile = new File(this.directory + "/" + headline[1].substring(1));
 							FileWriter writer = new FileWriter(newFile);
 							BufferedWriter bw = new BufferedWriter(writer);
 							//capture The data by reading the buffer after encountering \r\n in the request
-							String data = returnAppendData(reqbuff);
-							if (data != null) {
+//							String data = returnAppendData(reqbuff);
+							
+							while ((line = reqbuff.readLine()) != null ) {
+							    Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
+							     
+								if(line.equals("")) 
+								{
+									temp = reqbuff.readLine();
+									System.out.println(temp);
+									data = temp + "\n";
+									
+									if (line != null ) 
+									{
+									    Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);										 
+									} 
+								} 
+							}
+							
+							if (data != null) 
+							{
 								bw.write(data);
 								responsebody = data;
 							}else{
@@ -134,39 +198,47 @@ public class Server {
 							
 							bw.close();
 						}
+				
+//					else
+//					{
+//							hs = HttpStatus.FORBIDDEN;
+//							responsebody += "Access to the File is Forbidden \r\n";
+//					}
+					
 					// make response headers, append to response body and write response to socket
-					String finalResponse = HttpResponseBuilder(responsebody,hs);
-					respbuff.write(finalResponse);
-					respbuff.flush();
-					responsebody = "";
-					respbuff.close();
+					
+//					respbuff.close();
 				}	catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 			else{
 				// write bad syntax on socket and listen again(don't know how yet!)
-			}	
+			}
+			String finalResponse = HttpResponseBuilder(responsebody,hs);
+			respbuff.write(finalResponse);
+			respbuff.flush();
+			responsebody = "";
 		}
 	}
 		
 	private String returnAppendData(BufferedReader reqbuff) {
-		String line= "";
-		StringBuilder stringBuilder = null;
-			
-			try {
-				while ((line = reqbuff.readLine()) != null ) {
-					System.out.println(line);  
-				    stringBuilder = new StringBuilder();
-					if(line.equals("\r\n\r\n"))
-						while((line = reqbuff.readLine()) != null)
-							stringBuilder.append(line + "\n");
-					}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		return stringBuilder.toString();
-	}
+		 		String line= "";
+		 		StringBuilder stringBuilder = null;
+		 			
+		 			try {
+		 				while ((line = reqbuff.readLine()) != null ) {
+		 					System.out.println(line);  
+		 				    stringBuilder = new StringBuilder();
+		 					if(line.equals("\r\n\r\n"))
+		 						while((line = reqbuff.readLine()) != null)
+		 							stringBuilder.append(line + "\n");
+		 					}
+		 			} catch (IOException e) {
+		 				e.printStackTrace();
+		 			}
+				return stringBuilder.toString();
+		 	}
 
 	public String HttpResponseBuilder(String respBody, HttpStatus hs){
 		String response = "";

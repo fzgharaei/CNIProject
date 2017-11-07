@@ -38,6 +38,8 @@ public class Post {
 			requestWriter.print(request.getRequestParameters().getData()+ "\r\n");
 			requestWriter.flush();
 
+			
+			
 			BufferedReader rd = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			String line;
 			while ((line = rd.readLine()) != null) {
