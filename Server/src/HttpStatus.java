@@ -1,9 +1,11 @@
 
 public enum HttpStatus {
 	OK(200,"OK"), 
+	BADREQUEST(400, "Bad Request"),
 	NFOUND(404, "Not Found"), 
 	NMODIFIED(304, "Not Modified"),
 	FORBIDDEN(403,"Access is Forbidden");
+	
 	
 	private int value;
 	private String msg;

@@ -106,8 +106,8 @@ public class Server {
 						//handling file problems
 					}
 				}else{
-					// handling no directory given exception
-				}
+					hs = HttpStatus.NFOUND;
+					responsebody += "the Directory was Not Found on the Server \r\n";				}
 			}else if(headline[0].equals("POST")){
 				
 				try {
@@ -213,13 +213,17 @@ public class Server {
 				}
 			}
 			else{
-				// write bad syntax on socket and listen again(don't know how yet!)
+				hs = HttpStatus.BADREQUEST;
+				responsebody += "Error! Bad Syntax! \nYou have entered a command which we do not support. \nPlease try again";
 			}
-			String finalResponse = HttpResponseBuilder(responsebody,hs);
-			respbuff.write(finalResponse);
-			respbuff.flush();
-			responsebody = "";
 		}
+		String finalResponse = HttpResponseBuilder(responsebody,hs);
+//		System.out.println(finalResponse);
+		respbuff.write(finalResponse);
+		respbuff.flush();
+		responsebody = "";
+		finalResponse = "";
+		respbuff.close();
 	}
 		
 	private String returnAppendData(BufferedReader reqbuff) {
