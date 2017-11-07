@@ -27,12 +27,14 @@ public class Get {
 		try {
 			String path ="";
 			String host= "";
+			int port = 80;
 			if(request != null ){
 				 path = request.getRequestParameters().getPath();
 				 host = new URL(request.getUrl()).getHost();
+				 port = new URL(request.getUrl()).getPort();
 			}
 			InetAddress address = InetAddress.getByName(host);
-			Socket socket = new Socket(address, 8080);
+			Socket socket = new Socket(address, port);
 			
 			PrintWriter pw = new PrintWriter(socket.getOutputStream());
 			pw.println("GET " + path +" HTTP/1.0");
