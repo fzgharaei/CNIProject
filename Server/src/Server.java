@@ -58,7 +58,7 @@ public class Server {
 //						File mainDir = new File(this.directory);
 //						String[] subDirNames = mainDir.list();
 						ArrayList<String> subDirNames = serverDirectory.filesList();
-						responsebody = "Files and Directories in Server Main Dir are as follow:";
+						responsebody = "Files and Directories in Server Main Dir are as follow: \n";
 						for(String s:subDirNames)
 							responsebody += s +"\n";
 						// write response to socket
@@ -131,30 +131,39 @@ public class Server {
 					String temp = "";
 					// filename is found and name is not a directory
 					
-					if(isFound && !(new File(this.directory + "/" +headline[1].substring(1)).isDirectory())){
+					if(isFound && !(new File(headline[1]).isDirectory())){
 						
 						
 						if(serverDirectory.isAccessible(headline[1].substring(1)))
 						{
-						/*	String data = returnAppendData(reqbuff);
-							if (data != null ) 
-							{
-								//Files.write(Paths.get(mainDir.getPath()+headline[1]), data.getBytes(), StandardOpenOption.APPEND);
-								Files.write(Paths.get(this.directory + headline[1]), data.getBytes(), StandardOpenOption.APPEND);
-							}*/
 							while ((line = reqbuff.readLine()) != null ) {
 //								System.out.println(line);
-							    Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);
-							     
+								File mainDir = new File(this.directory);
+								FileWriter respFile = new FileWriter(mainDir.getPath() + "/" + headline[1].substring(1));
+								BufferedWriter buff = new BufferedWriter(respFile);
+//								Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
+//							    buff.write(line);
+								int bufflength = 1;
+								System.out.println(line);
+							    if(line.contains("Content-Length")){
+							    	String[] sline = line.split(": ");
+							    	System.out.println(sline[0]+"\n"+sline[1]);
+							    	bufflength = Integer.parseInt(sline[1]);
+							    }
 								if(line.equals("")) 
 								{
-									temp = reqbuff.readLine();
-									System.out.println(temp);
-									data = temp + "\n";
-									if (line != null ) 
-									{
-									    Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);										 
-									} 
+//									line = reqbuff.readLine();
+									char[] buffer = new char[1024];
+									int count = reqbuff.read(buffer, 0, bufflength);
+									if(count == buffer.length) System.out.println("&&&&&&&&&&&&");
+									System.out.println(buffer.toString());
+//									data = line + "\n";
+//									if (line != null ) 
+//									{
+										buff.write(buffer);
+										break;
+////									    Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);										 
+//									} 
 								} 
 							} 
 							hs= HttpStatus.OK;

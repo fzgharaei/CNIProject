@@ -28,14 +28,16 @@ public class Post {
 			System.out.println(url.getFile());
 			//BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
 			PrintWriter requestWriter = new PrintWriter(socket.getOutputStream());
-
-			requestWriter.print("POST " + url.getFile() + " HTTP/1.0\r\n");
-			requestWriter.print("Content-Length: " + request.getRequestParameters().getData().length() + "\r\n");
-			requestWriter.print(request.getRequestParameters().getHeaderString());
-			requestWriter.print("Accept-Language: en-us\r\n");
-			requestWriter.print("Connection: Keep-Alive\r\n");
-			requestWriter.print("\r\n\r\n");
-			requestWriter.print(request.getRequestParameters().getData()+ "\r\n");
+			String prequest = "POST " + url.getFile() + " HTTP/1.0\r\n"+ "Content-Length: " + request.getRequestParameters().getData().length() + "\r\n"+request.getRequestParameters().getHeaderString()+"Accept-Language: en-us\r\n"+"Connection: Keep-Alive\r\n"+"\r\n" + request.getRequestParameters().getData()+ "\r\n";
+//			requestWriter.print("POST " + url.getFile() + " HTTP/1.0\r\n");
+//			requestWriter.print("Content-Length: " + request.getRequestParameters().getData().length() + "\r\n");
+//			requestWriter.print(request.getRequestParameters().getHeaderString());
+//			requestWriter.print("Accept-Language: en-us\r\n");
+//			requestWriter.print("Connection: Keep-Alive\r\n");
+//			requestWriter.print("\r\n\r\n");
+//			requestWriter.print(request.getRequestParameters().getData()+ "\r\n");
+			System.out.println(prequest);
+			requestWriter.print(prequest);
 			requestWriter.flush();
 
 			
