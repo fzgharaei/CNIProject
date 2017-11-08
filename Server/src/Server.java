@@ -13,6 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 
 public class Server {
@@ -48,7 +49,7 @@ public class Server {
 		BufferedWriter respbuff = new BufferedWriter(new OutputStreamWriter(currClient.getOutputStream()));
 		
 		String line = reqbuff.readLine();
-		HttpStatus hs = null;
+		HttpStatus hs = HttpStatus.OK;
 		String responsebody = "";
 		if(line!=null){
 			String[] headline = line.split(" ");
@@ -132,40 +133,24 @@ public class Server {
 					// filename is found and name is not a directory
 					
 					if(isFound && !(new File(headline[1]).isDirectory())){
-						
-						
 						if(serverDirectory.isAccessible(headline[1].substring(1)))
 						{
-							while ((line = reqbuff.readLine()) != null ) {
-//								System.out.println(line);
-								File mainDir = new File(this.directory);
-								FileWriter respFile = new FileWriter(mainDir.getPath() + "/" + headline[1].substring(1));
-								BufferedWriter buff = new BufferedWriter(respFile);
-//								Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
-//							    buff.write(line);
-								int bufflength = 1;
+							while(reqbuff.ready()){	
 								System.out.println(line);
-							    if(line.contains("Content-Length")){
-							    	String[] sline = line.split(": ");
-							    	System.out.println(sline[0]+"\n"+sline[1]);
-							    	bufflength = Integer.parseInt(sline[1]);
-							    }
+								line = reqbuff.readLine();
 								if(line.equals("")) 
 								{
-//									line = reqbuff.readLine();
-									char[] buffer = new char[1024];
-									int count = reqbuff.read(buffer, 0, bufflength);
-									if(count == buffer.length) System.out.println("&&&&&&&&&&&&");
-									System.out.println(buffer.toString());
-//									data = line + "\n";
-//									if (line != null ) 
-//									{
-										buff.write(buffer);
-										break;
-////									    Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);										 
-//									} 
+									line = reqbuff.readLine();
+									Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
+									responsebody += line;
+									if (line == null ) break;
 								} 
-							} 
+								if(line == null)
+								{
+									System.out.println("Encountered Bad Response.. No Empty Line between Headers and Data");
+									break;
+								}
+							}
 							hs= HttpStatus.OK;
 						}else
 						{
@@ -174,52 +159,34 @@ public class Server {
 						}
 					}
 						else{
-							//File newFile = new File(mainDir.getPath() + "/" + headline[1].substring(1));
-							File newFile = new File(this.directory + "/" + headline[1].substring(1));
-							FileWriter writer = new FileWriter(newFile);
-							BufferedWriter bw = new BufferedWriter(writer);
-							//capture The data by reading the buffer after encountering \r\n in the request
-//							String data = returnAppendData(reqbuff);
-							
-							while ((line = reqbuff.readLine()) != null ) {
-							    Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
-							     
+							//File newFile = new File(this.directory + headline[1].substring(1));
+							PrintWriter writer = new PrintWriter(this.directory + headline[1].substring(1), "UTF-8");
+							while(reqbuff.ready())
+							{	
+								System.out.println(line);
+								line = reqbuff.readLine();
 								if(line.equals("")) 
 								{
-									temp = reqbuff.readLine();
-									System.out.println(temp);
-									data = temp + "\n";
-									
-									if (line != null ) 
-									{
-									    Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);										 
-									} 
+									line = reqbuff.readLine();
+									//Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);
+									writer.println(line);
+									responsebody += line;
+									if (line == null ) break;
 								} 
+								if(line == null)
+								{
+									System.out.println("Encountered Bad Response.. No Empty Line between Headers and Data");
+									break;
+								}
 							}
-							
-							if (data != null) 
-							{
-								bw.write(data);
-								responsebody = data;
-							}else{
-								responsebody = "No post body!";
-							}
-							
-							bw.close();
+
+							writer.close();
 						}
-				
-//					else
-//					{
-//							hs = HttpStatus.FORBIDDEN;
-//							responsebody += "Access to the File is Forbidden \r\n";
-//					}
-					
-					// make response headers, append to response body and write response to socket
-					
-//					respbuff.close();
+
 				}	catch (Exception e) {
 					e.printStackTrace();
 				}
+
 			}
 			else{
 				hs = HttpStatus.BADREQUEST;
@@ -235,7 +202,7 @@ public class Server {
 		respbuff.close();
 	}
 		
-	private String returnAppendData(BufferedReader reqbuff) {
+/*	private String returnAppendData(BufferedReader reqbuff) {
 		 		String line= "";
 		 		StringBuilder stringBuilder = null;
 		 			
@@ -252,6 +219,7 @@ public class Server {
 		 			}
 				return stringBuilder.toString();
 		 	}
+*/
 
 	public String HttpResponseBuilder(String respBody, HttpStatus hs){
 		String response = "";
@@ -300,3 +268,28 @@ public class Server {
 }
 
 //https://github.com/iamprem/HTTPclient-server/blob/master/HTTPServer/src/MultiThreadedServer.java
+/*		line = reqbuff.readLine();
+File mainDir = new File(this.directory);
+FileWriter respFile = new FileWriter(mainDir.getPath() + "/" + headline[1].substring(1));
+BufferedWriter buff = new BufferedWriter(respFile);
+if(line.equals("")){
+	line = reqbuff.readLine();
+	buff.write();
+	//Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
+	if(line == null){
+		break;
+	}
+}
+if(line == null){
+	break;
+}
+
+}*/
+
+
+//if (data != null) 
+//{
+//	responsebody = data;
+//}else{
+//	responsebody = "No post body!";
+//}
