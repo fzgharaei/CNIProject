@@ -8,24 +8,31 @@ public class FileDirectory {
 	FileDirectory(String path){
 		files = new ArrayList<DFile>();
 		File dir = new File(path);
+		
+	}
+	public void fileList(File dir){
 		String[] subDirpaths = dir.list();
 		File[] subFiles = dir.listFiles();
-		for(int i=0;i<subDirpaths.length;i++){
-			Pattern p1 = Pattern.compile(".class");
-			Pattern p2 = Pattern.compile(".java");
-			Pattern p3 = Pattern.compile(".jar");
-			Matcher m1 = p1.matcher(subDirpaths[i]);
-			Matcher m2 = p2.matcher(subDirpaths[i]); 
-			Matcher m3 = p3.matcher(subDirpaths[i]);
-			DFile temp;
-			if(m1.find()||m2.find()||m3.find())
-				temp = new DFile(subFiles[i].getName(),subDirpaths[i],true);
-			else
-				temp = new DFile(subFiles[i].getName(),subDirpaths[i],false);
-			files.add(temp);
+		Pattern p1 = Pattern.compile(".class");
+		Pattern p2 = Pattern.compile(".java");
+		Pattern p3 = Pattern.compile(".jar");
+		
+		for(File file :subFiles){
+			if(file.isFile()){
+				Matcher m1 = p1.matcher(file.getPath());
+				Matcher m2 = p2.matcher(file.getPath()); 
+				Matcher m3 = p3.matcher(file.getPath());
+				DFile temp;
+				if(m1.find()||m2.find()||m3.find())
+					temp = new DFile(file.getName(),file.getPath(),true);
+				else
+					temp = new DFile(file.getName(),file.getPath(),false);
+				files.add(temp);
+			}else if(file.isDirectory()){
+				fileList(file);
+			}
 		}
 	}
-	
 	boolean fileExist(String path){
 		for(DFile df:files){
 			if(df.address.equals(path))
