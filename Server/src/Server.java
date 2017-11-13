@@ -1,7 +1,7 @@
 import java.net.Socket;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,23 +127,29 @@ public class Server {
 							isFound = false;
 						
 					}
-					
-					String data = "";
-					String temp = "";
+
 					// filename is found and name is not a directory
-					
 					if(isFound && !(new File(headline[1]).isDirectory())){
 						if(serverDirectory.isAccessible(headline[1].substring(1)))
 						{
+//							PrintWriter writer = new PrintWriter(this.directory + headline[1].substring(1), "UTF-8");
 							while(reqbuff.ready()){	
 								System.out.println(line);
 								line = reqbuff.readLine();
 								if(line.equals("")) 
 								{
 									line = reqbuff.readLine();
-									Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
+									System.out.println(line);
+									FileWriter outFile = new FileWriter(this.directory +headline[1].substring(1));
+									BufferedWriter buff = new BufferedWriter(outFile);
+									buff.write(line);
+									buff.append('\n');
+									buff.close();
+									outFile.close();
+//									Files.write(Paths.get(headline[1].substring(1)), line.getBytes(), StandardOpenOption.APPEND);
+//									writer.println(line);
 									responsebody += line;
-									if (line == null ) break;
+//									if (line == null ) break;
 								} 
 								if(line == null)
 								{
@@ -160,11 +166,22 @@ public class Server {
 					}
 						else{
 							//File newFile = new File(this.directory + headline[1].substring(1));
+							Path path = Paths.get(this.directory +headline[1].substring(1));
+							try {
+							    Files.createDirectories(path);
+							} catch (IOException e) {
+							    System.err.println("Cannot create directories - " + e);
+							}
 							PrintWriter writer = new PrintWriter(this.directory + headline[1].substring(1), "UTF-8");
 							while(reqbuff.ready())
 							{	
 								System.out.println(line);
 								line = reqbuff.readLine();
+								if(line == null)
+								{
+									System.out.println("Encountered Bad Response.. No Empty Line between Headers and Data");
+									break;
+								}
 								if(line.equals("")) 
 								{
 									line = reqbuff.readLine();
@@ -173,11 +190,7 @@ public class Server {
 									responsebody += line;
 									if (line == null ) break;
 								} 
-								if(line == null)
-								{
-									System.out.println("Encountered Bad Response.. No Empty Line between Headers and Data");
-									break;
-								}
+								
 							}
 
 							writer.close();

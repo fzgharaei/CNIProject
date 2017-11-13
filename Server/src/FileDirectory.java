@@ -8,10 +8,9 @@ public class FileDirectory {
 	FileDirectory(String path){
 		files = new ArrayList<DFile>();
 		File dir = new File(path);
-		
+		fileList(dir);
 	}
 	public void fileList(File dir){
-		String[] subDirpaths = dir.list();
 		File[] subFiles = dir.listFiles();
 		Pattern p1 = Pattern.compile(".class");
 		Pattern p2 = Pattern.compile(".java");
