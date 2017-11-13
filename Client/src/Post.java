@@ -19,12 +19,18 @@ public class Post {
 	
 	public void post(Request request) throws Exception {
 		URL url = new URL(request.getUrl());
+		int port = 8080;
 		InetAddress address = InetAddress.getByName(url.getHost());
 		ResponseParameters response =  new ResponseParameters();
 		Socket socket;
 		try {
-			socket = new Socket(address, 8080);
-			//BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
+			
+			if(request != null ){
+				 port = new URL(request.getUrl()).getPort();
+			}
+			
+			socket = new Socket(address, port);
+//			BufferedWriter wr = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8"));
 			PrintWriter requestWriter = new PrintWriter(socket.getOutputStream());
 			String prequest = "POST " + url.getFile() + " HTTP/1.0\r\n"+ "Content-Length: " + request.getRequestParameters().getData().length() + "\r\n"+request.getRequestParameters().getHeaderString()+"Accept-Language: en-us\r\n"+"Connection: Keep-Alive\r\n"+"\r\n" + request.getRequestParameters().getData()+ "\r\n";
 //			requestWriter.print("POST " + url.getFile() + " HTTP/1.0\r\n");

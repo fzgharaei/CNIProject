@@ -12,10 +12,9 @@ public class ResponseManager {
 		//Sun Oct 15 22:01:54 EDT 2017
 		//	16 Oct 2017 02:02:40 GMT
 
-//		System.out.println(date.);
-		String[] data = {"-v","-p","8080","-d","../"};
+		//String[] data = {"-v","-p","8080","-d","../"};
 		ServerCmdParser parser = new ServerCmdParser();
-		HashMap<String, String> input = parser.parse(data);
+		HashMap<String, String> input = parser.parse(args);
 		System.out.println(Integer.parseInt(input.get("port")));
 		Server server = new Server(Integer.parseInt(input.get("port")), Boolean.parseBoolean(input.get("verbose")), input.get("path"));
 		server.init();
