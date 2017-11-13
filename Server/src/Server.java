@@ -1,7 +1,4 @@
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,6 +71,13 @@ public class Server {
 //						String[] subDirs = mainDir.list();
 						ArrayList<String> subDirs = serverDirectory.filesList();
 						for(String s:subDirs){
+							System.out.println(s);
+							File file1 = new File(s);
+							File file2 = new File(headline[1].substring(1));
+							System.out.println("*******");
+							System.out.println(file1.getCanonicalPath());
+							System.out.println(file2.getCanonicalPath());
+
 							if(s.equals(headline[1].substring(1)))
 							{
 								if(!serverDirectory.fileExist(headline[1].substring(1)))
@@ -165,35 +169,49 @@ public class Server {
 						}
 					}
 						else{
-							//File newFile = new File(this.directory + headline[1].substring(1));
-							Path path = Paths.get(this.directory +headline[1].substring(1));
-							try {
-							    Files.createDirectories(path);
-							} catch (IOException e) {
-							    System.err.println("Cannot create directories - " + e);
-							}
-							PrintWriter writer = new PrintWriter(this.directory + headline[1].substring(1), "UTF-8");
-							while(reqbuff.ready())
-							{	
-								System.out.println(line);
-								line = reqbuff.readLine();
-								if(line == null)
-								{
-									System.out.println("Encountered Bad Response.. No Empty Line between Headers and Data");
-									break;
-								}
-								if(line.equals("")) 
-								{
-									line = reqbuff.readLine();
-									//Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);
-									writer.println(line);
-									responsebody += line;
-									if (line == null ) break;
-								} 
-								
-							}
+//							File newFile = new File(this.directory + headline[1].substring(1));
+//							Path path = Paths.get(newFile.getAbsolutePath());
+//							try {
+//							    Files.createDirectories(path);
+//							} catch (IOException e) {
+//							    System.err.println("Cannot create directories - " + e);
+//							}
+							File newFile = new File(this.directory + headline[1].substring(1));
+							
+							if (!newFile.isDirectory()) {
+								  File parentDir = newFile.getParentFile();
+								  boolean success = parentDir.mkdirs();
+								  if (success) {
+								    System.out.println("Created path: " + newFile.getPath());
+								    
+									PrintWriter writer = new PrintWriter(this.directory + headline[1].substring(1), "UTF-8");
+									while(reqbuff.ready())
+									{	
+										System.out.println(line);
+										line = reqbuff.readLine();
+										if(line == null)
+										{
+											System.out.println("Encountered Bad Response.. No Empty Line between Headers and Data");
+											break;
+										}
+										if(line.equals("")) 
+										{
+											line = reqbuff.readLine();
+											//Files.write(Paths.get(headline[1]), line.getBytes(), StandardOpenOption.APPEND);
+											writer.println(line);
+											responsebody += line;
+											if (line == null ) break;
+										} 
+										
+									}
 
-							writer.close();
+									writer.close();
+								  } else {
+									    System.out.println("Could not create path: " + newFile.getPath());
+									  }
+									} else {
+									  System.out.println("Path exists: " + newFile.getPath());
+									}
 						}
 
 				}	catch (Exception e) {

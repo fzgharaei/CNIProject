@@ -1,6 +1,4 @@
 import java.util.HashMap;
-
-import HttpMsg.RequestParameters;
 /**
  * 
  * @author RahulReddy
@@ -15,6 +13,12 @@ public class ResponseManager {
 		//String[] data = {"-v","-p","8080","-d","../"};
 		ServerCmdParser parser = new ServerCmdParser();
 		HashMap<String, String> input = parser.parse(args);
+		if(input.containsKey("path"))
+			System.setProperty("user.dir", input.get("path"));
+		System.out.println("%%%%%%%");
+		System.out.println(input.get("path"));
+		System.out.println("%%%%%%%");
+		
 		System.out.println(Integer.parseInt(input.get("port")));
 		Server server = new Server(Integer.parseInt(input.get("port")), Boolean.parseBoolean(input.get("verbose")), input.get("path"));
 		server.init();

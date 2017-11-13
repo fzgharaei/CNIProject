@@ -1,7 +1,4 @@
 import java.util.HashMap;
-import java.util.Map;
-
-import HttpMsg.*;
 
 /**
  * Parses the Data from the Command prompt of the server

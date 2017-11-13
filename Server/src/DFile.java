@@ -1,15 +1,15 @@
+import java.io.File;
 
 public class DFile {
-	String fileName;
-	String address;
+	File file;
 	boolean restricted;
-	DFile(String name, String adr, boolean restricted){
-		this.fileName = name;
-		this.address = adr;
+	DFile(File file, boolean restricted){
+		this.file = file;
 		this.restricted = restricted;
 	}
 	
 	boolean isAccessible(){
 		return !restricted;
 	}
+	
 }
