@@ -48,8 +48,10 @@ public class Server {
 		String line = reqbuff.readLine();
 		HttpStatus hs = HttpStatus.OK;
 		String responsebody = "";
+
 		if(line!=null){
 			String[] headline = line.split(" ");
+			boolean fileFound = false;
 			if(headline[0].equals("GET")){
 				if(headline[1].equals("/") ){
 					try{
@@ -66,32 +68,33 @@ public class Server {
 					}
 				}else if(!headline[1].equals("HTTP/1.0")){
 					try{
+						
 						File mainDir = new File(this.directory);
 						FileReader respFile;
-//						String[] subDirs = mainDir.list();
 						ArrayList<String> subDirs = serverDirectory.filesList();
+						
 						for(String s:subDirs){
+							
 							System.out.println(s);
 							File file1 = new File(s);
-							File file2 = new File(headline[1].substring(1));
+							File file2 = new File(this.directory + headline[1]);
+							
 							System.out.println("*******");
 							System.out.println(file1.getCanonicalPath());
 							System.out.println(file2.getCanonicalPath());
 
-							if(s.equals(headline[1].substring(1)))
+							if(file1.compareTo(file2) == 0)
 							{
-								if(!serverDirectory.fileExist(headline[1].substring(1)))
+								
+								if(!serverDirectory.isAccessible(this.directory + headline[1]))
 								{
-									hs = HttpStatus.NFOUND;
-									responsebody += "File Not Found on the Server \r\n";
-								}
-								else if(!serverDirectory.isAccessible(headline[1].substring(1)))
-								{
+									fileFound = true;
 									hs = HttpStatus.FORBIDDEN;
 									responsebody += "Access to the File is Forbidden \r\n";
 								}
 								else
 									try{
+									fileFound = true;
 									respFile = new FileReader(mainDir.getPath() + "/" + headline[1].substring(1));
 									BufferedReader buff = new BufferedReader(respFile);
 									String fileLine;
@@ -102,7 +105,8 @@ public class Server {
 									hs = HttpStatus.OK;
 									buff.close();
 									respFile.close();
-								 }catch(IOException e){
+								 }
+								catch(IOException e){
 									 throw new Exception("The given file doesn't exist or it's unable to be opened");
 								 }
 							}
@@ -110,9 +114,12 @@ public class Server {
 					}catch(Exception e){
 						//handling file problems
 					}
-				}else{
+				}
+				
+				if(!fileFound){
 					hs = HttpStatus.NFOUND;
-					responsebody += "the Directory was Not Found on the Server \r\n";				}
+					responsebody += "the Directory was Not Found on the Server \r\n";			
+				}
 			}else if(headline[0].equals("POST")){
 				
 				try {
@@ -120,10 +127,20 @@ public class Server {
 					//String[] filesList = mainDir.list();
 					ArrayList<String> subDirs = serverDirectory.filesList();
 					boolean isFound = false;
+					System.out.println("******IN POST*******");
 					for(String name : subDirs){
 						//if(serverDirectory.fileExist(headline[1].substring(1))){
+							
+						System.out.println(name);
+						File file1 = new File(name);
+						File file2 = new File(this.directory + headline[1]);
 						
-						if(name.equals(headline[1].substring(1))){
+						
+						System.out.println("****CANONICAL PATHS***");
+						System.out.println(file1.getCanonicalPath());
+						System.out.println(file2.getCanonicalPath());
+						
+						if(file1.compareTo(file2) == 0){
 							isFound = true;
 							break;
 						}
@@ -169,18 +186,18 @@ public class Server {
 						}
 					}
 						else{
-//							File newFile = new File(this.directory + headline[1].substring(1));
-//							Path path = Paths.get(newFile.getAbsolutePath());
-//							try {
-//							    Files.createDirectories(path);
-//							} catch (IOException e) {
-//							    System.err.println("Cannot create directories - " + e);
-//							}
+							
 							File newFile = new File(this.directory + headline[1].substring(1));
 							
 							if (!newFile.isDirectory()) {
+								
 								  File parentDir = newFile.getParentFile();
-								  boolean success = parentDir.mkdirs();
+								  boolean success = true;
+								  
+								  if(!parentDir.exists()){
+									  success = parentDir.mkdirs();
+								  }
+								 // boolean success = parentDir.mkdirs();
 								  if (success) {
 								    System.out.println("Created path: " + newFile.getPath());
 								    
@@ -233,24 +250,6 @@ public class Server {
 		respbuff.close();
 	}
 		
-/*	private String returnAppendData(BufferedReader reqbuff) {
-		 		String line= "";
-		 		StringBuilder stringBuilder = null;
-		 			
-		 			try {
-		 				while ((line = reqbuff.readLine()) != null ) {
-		 					System.out.println(line);  
-		 				    stringBuilder = new StringBuilder();
-		 					if(line.equals("\r\n\r\n"))
-		 						while((line = reqbuff.readLine()) != null)
-		 							stringBuilder.append(line + "\n");
-		 					}
-		 			} catch (IOException e) {
-		 				e.printStackTrace();
-		 			}
-				return stringBuilder.toString();
-		 	}
-*/
 
 	public String HttpResponseBuilder(String respBody, HttpStatus hs){
 		String response = "";
@@ -270,6 +269,12 @@ public class Server {
 			response += "\r\n";
 		} else if (hs.equals(HttpStatus.NMODIFIED)) {
 			
+			response += hs.toString() + "\r\n";
+			response += "Date:" + getTimeStamp() + "\r\n";
+			response += "Server: localhost\r\n";
+			response += "\r\n";
+		}
+		else if(hs.equals(HttpStatus.FORBIDDEN)){
 			response += hs.toString() + "\r\n";
 			response += "Date:" + getTimeStamp() + "\r\n";
 			response += "Server: localhost\r\n";
